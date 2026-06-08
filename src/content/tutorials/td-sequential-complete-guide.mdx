@@ -1,0 +1,216 @@
+---
+title: "TD Sequential（TD13）完整教程"
+description: "从TD9 Setup到TD13 Countdown，系统学习Tom DeMark狄克马克序列，精准识别市场转折点"
+category: "技术指标"
+tags: ["TD指标", "神奇九转", "Tom DeMark", "技术分析", "趋势反转"]
+difficulty: "进阶"
+publishDate: 2025-06-08
+order: 1
+---
+
+import InteractiveChart from '../../components/interactive/InteractiveChart.tsx';
+import ProcessSteps from '../../components/interactive/ProcessSteps.tsx';
+import ComparisonTable from '../../components/interactive/ComparisonTable.tsx';
+
+## 什么是 TD Sequential？
+
+TD Sequential（TD序列），由技术分析大师 **Tom DeMark** 发明，中文圈常称为 **"神奇九转"**。
+
+它是一种通过**计数方法**来识别价格趋势潜在转折点的技术指标。核心思想：当一方力量持续占优后逐渐衰竭，趋势可能反转。
+
+:::tip[核心理念]
+市场由买卖双方力量博弈驱动。当买方力量持续占优一段时间后，必然会逐渐衰竭，从而引发趋势反转。TD指标就是用来**量化这种"衰竭"**的。
+:::
+
+## TD指标的两层结构
+
+TD Sequential 由**两个独立阶段**组成，很多人只知道TD9，但完整的TD系统包含两个层次：
+
+<ProcessSteps
+  title="TD Sequential 两阶段流程"
+  steps={[
+    {
+      title: "阶段一：TD Setup（排列）→ 计数到 9",
+      description: "识别趋势可能衰竭的初步信号。买入Setup：连续9根K线收盘价低于4根K线前的收盘价。卖出Setup：连续9根K线收盘价高于4根K线前的收盘价。任何一根不满足条件，计数归零。",
+      color: "bg-blue-50 border-blue-400 text-blue-800",
+    },
+    {
+      title: "阶段二：TD Countdown（倒计时）→ 计数到 13",
+      description: "在TD9完成后开始。买入Countdown：收盘价 ≤ 2根K线前的低点(Low)。卖出Countdown：收盘价 ≥ 2根K线前的高点(High)。不需要连续，累计到13次即完成。",
+      color: "bg-orange-50 border-orange-400 text-orange-800",
+    },
+    {
+      title: "信号确认 → TD13 完成",
+      description: "TD13完成是高概率反转信号。建议结合MA120均线方向、RSI背离、成交量变化等多因素确认后，分批建仓入场。",
+      color: "bg-green-50 border-green-400 text-green-800",
+    },
+  ]}
+/>
+
+## 交互式K线图演示
+
+下面是一个交互式K线图，你可以点击 **"显示TD标记"** 按钮来查看TD9买卖信号在图表上的效果：
+
+<InteractiveChart title="TD Sequential 信号演示" showTD={true} />
+
+:::note[提示]
+图表上的数据为模拟生成。TD9买入信号（绿色箭头↑）表示下跌可能结束，TD9卖出信号（红色箭头↓）表示上涨可能结束。
+:::
+
+## 阶段一：TD Setup（排列）详细规则
+
+### 🔴 买入 Setup（识别下跌衰竭）
+
+**触发条件：** 当前K线收盘价 **低于** 4根K线前的收盘价
+
+**完成条件：** **连续 9 根K线**，每根的收盘价都低于各自4根K线前的收盘价
+
+```
+公式：Close[i] < Close[i-4]  连续满足 9 次
+```
+
+:::caution[重要]
+任何一根K线不满足条件，**计数立即归零**，必须从头开始！
+:::
+
+### 🟢 卖出 Setup（识别上涨衰竭）
+
+**触发条件：** 当前K线收盘价 **高于** 4根K线前的收盘价
+
+**完成条件：** **连续 9 根K线**，每根的收盘价都高于各自4根K线前的收盘价
+
+```
+公式：Close[i] > Close[i-4]  连续满足 9 次
+```
+
+## 阶段二：TD Countdown（倒计时）详细规则
+
+TD9完成后，进入**倒计时阶段**。这是TD13的核心！
+
+### 🔴 买入 Countdown
+
+**条件：** 收盘价 **≤ 2根K线前的低点**
+
+```
+公式：Close[i] ≤ Low[i-2]
+```
+
+### 🟢 卖出 Countdown
+
+**条件：** 收盘价 **≥ 2根K线前的高点**
+
+```
+公式：Close[i] ≥ High[i-2]
+```
+
+:::tip[关键区别]
+Countdown **不需要连续**！中间有些K线不满足条件也没关系，计数**不会重置**。只要累计满足13次，TD13就完成了。
+:::
+
+## TD9 vs TD13 全面对比
+
+<ComparisonTable
+  title="TD9 Setup vs TD13 Countdown 对比"
+  leftTitle="TD9 (Setup 排列)"
+  rightTitle="TD13 (Countdown 倒计时)"
+  leftColor="blue"
+  rightColor="orange"
+  rows={[
+    {
+      dimension: "是否需要连续",
+      left: "✅ 必须连续 9 根K线",
+      right: "❌ 不需要，累计到 13 次",
+    },
+    {
+      dimension: "比较对象",
+      left: "Close vs Close[i-4]",
+      right: "Close vs Low/High[i-2]",
+    },
+    {
+      dimension: "信号强度",
+      left: "⭐⭐⭐ 初步预警",
+      right: "⭐⭐⭐⭐⭐ 强确认",
+    },
+    {
+      dimension: "出现频率",
+      left: "较高（趋势中常见）",
+      right: "较低（更稀缺更珍贵）",
+    },
+    {
+      dimension: "依赖关系",
+      left: "独立阶段",
+      right: "必须先完成 TD9",
+    },
+    {
+      dimension: "实战建议",
+      left: "底仓试探 / 预警观察",
+      right: "加仓确认 / 核心信号",
+    },
+  ]}
+/>
+
+## Countdown 被取消的 4 种情况
+
+TD13的Countdown并不是一定会走到13，以下情况会被中断：
+
+| 情况 | 说明 |
+|---|---|
+| **① 价格反向突破** | 买入Countdown中，价格涨破Setup阶段最高点 → 取消 |
+| **② 新的反向 Setup** | 出现了相反方向的TD9 → 取消 |
+| **③ 同向新 Setup** | 同方向又出现新TD9 → "Recycling 回收"，重新开始 |
+| **④ 价格跌破支撑** | 卖出Countdown中，价格跌破Setup阶段最低点 → 取消 |
+
+## 实战交易策略
+
+### 策略一：分级建仓法
+
+- **TD9 完成** → 建立 1/3 底仓（试探性入场）
+- **TD13 完成** → 加仓 1/3（确认信号）
+- **突破确认** → 加仓最后 1/3（趋势反转确认）
+
+**止损：** 买入止损设在TD13最低点下方
+
+### 策略二：TD13 + MA120
+
+- ✅ **做多：** TD13完成 + 价格站上MA120 → 可以建仓
+- ❌ **不做多：** TD13完成但价格远在MA120下方 → 可能只是反弹
+- ⚠️ **盘整：** MA120反复交叉 → 信号可靠性下降
+
+### 策略三：多周期共振（最强确认）
+
+- 日线 TD13 买入完成
+- 周线 TD9 买入完成（或接近）
+- 60分钟线也出现TD买入信号
+- **→ 多个时间框架同时指向反转，信号最强**
+
+## 不同时间周期的 TD13 含义
+
+| 周期 | 含义 | 适用场景 |
+|---|---|---|
+| 15分钟/30分钟 | 短期转折 | 日内交易 |
+| 60分钟/4小时 | 中短期转折 | 波段交易(1-2周) |
+| **日线** ⭐ | **中期转折** | **波段交易(2-4周)** |
+| 周线 | 中长期转折 | 中线(1-3个月) |
+| 月线 | 长期转折 | 长线(季度级别) |
+
+:::tip[推荐]
+日线级别的TD13是最常用的，信号可靠性和交易周期都比较适中。
+:::
+
+## 4 大常见陷阱
+
+1. **强趋势中TD13失效** — 暴跌/暴涨中TD13完成后价格可能继续原方向。必须结合趋势指标确认。
+2. **震荡市中频繁假信号** — 横盘时TD9和TD13反复出现。低波动率时不依赖TD做方向性交易。
+3. **只看TD13忽略大趋势** — 周线/月线明确下跌时，日线TD13可能只是反弹。必须先看大周期。
+4. **Countdown未完成就重仓** — TD9只是"预警"，不是"入场信号"。至少等TD13或结合其他确认指标。
+
+## 使用清单
+
+每次交易前对照检查：
+
+1. ✅ 先看大周期趋势方向（周线/月线MA方向）
+2. ✅ 等待TD9 Setup完成（预警阶段，不急于入场）
+3. ✅ 观察Countdown是否向13推进（跟踪倒计时）
+4. ✅ TD13完成 → 结合MA120/RSI/成交量确认
+5. ✅ 确认后分批建仓，不一次性满仓
+6. ✅ 设明确止损（TD13极值下方/上方）

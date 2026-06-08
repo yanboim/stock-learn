@@ -1,0 +1,53 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import TutorialMeta from '../components/TutorialMeta.astro';
+
+export interface Props {
+  title: string;
+  description: string;
+  category: string;
+  difficulty?: string;
+  publishDate: Date;
+  tags?: string[];
+}
+
+const { title, description, category, difficulty, publishDate, tags } = Astro.props;
+---
+
+<BaseLayout title={`${title} - 股票学习站`} description={description}>
+  <TutorialMeta
+    title={title}
+    description={description}
+    category={category}
+    difficulty={difficulty}
+    publishDate={publishDate}
+    tags={tags}
+  />
+
+  <!-- Back link -->
+  <a href="/tutorials" class="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 mt-6 mb-4">
+    ← 返回教程列表
+  </a>
+
+  <!-- Article Content -->
+  <article class="prose prose-lg max-w-none mt-6
+    prose-headings:text-gray-900
+    prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
+    prose-code:bg-gray-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+    prose-pre:bg-gray-900 prose-pre:text-gray-100
+    prose-img:rounded-xl prose-img:shadow-md
+    prose-table:border
+    prose-th:bg-gray-50 prose-th:border prose-th:px-4 prose-th:py-2
+    prose-td:border prose-td:px-4 prose-td:py-2
+  ">
+    <slot />
+  </article>
+
+  <!-- Risk Disclaimer -->
+  <div class="mt-12 p-6 bg-amber-50 border border-amber-200 rounded-xl">
+    <p class="text-sm text-amber-800">
+      ⚠️ <strong>风险提示：</strong>本教程内容仅供学习交流，不构成任何投资建议。
+      投资有风险，入市需谨慎。任何技术指标都有局限性，请结合多因素综合判断。
+    </p>
+  </div>
+</BaseLayout>
