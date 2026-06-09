@@ -17,11 +17,9 @@ RSI（Relative Strength Index，相对强弱指标），由技术分析大师 J.
 
 如果说MACD是趋势的"速度计"，那RSI就是市场的**温度计**——它能告诉你当前市场是"过热"还是"过冷"，帮助你判断价格是否偏离了合理范围。
 
-<div style="border-left:4px solid #10b981;background:#10b98110;border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0">
-<strong style="color:#10b981">💡 一句话理解</strong>
-
+:::tip[提示]
 RSI = 测量"涨的力量"和"跌的力量"的比值。RSI越高，说明近期涨的力度越强；RSI越低，说明近期跌的力度越强。
-</div>
+:::
 
 ## RSI的计算原理
 
@@ -84,11 +82,9 @@ RSI = 100 - 100 / (1 + 2.306) = 100 - 30.3 = 69.7
 
 <InteractiveChart showRSI={true} showVolume={true} height={350} />
 
-<div style="border-left:4px solid #10b981;background:#10b98110;border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0">
-<strong style="color:#10b981">💡 操作提示</strong>
-
+:::tip[提示]
 注意观察RSI在30以下和70以上的区域——这些是超卖和超买区域。同时关注RSI和价格的背离情况。
-</div>
+:::
 
 ## RSI的核心用法
 
@@ -103,9 +99,7 @@ RSI = 100 - 100 / (1 + 2.306) = 100 - 30.3 = 69.7
 | **30-50** | 偏弱 | 空头占优，趋势向下 | 谨慎观望 |
 | **< 30** | 超卖 | 跌太多了，可能要反弹 | 关注买入机会 |
 
-<div style="border-left:4px solid #f59e0b;background:#f59e0b10;border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0">
-<strong style="color:#f59e0b">⚠️ 超买≠立刻跌，超卖≠立刻涨</strong>
-
+:::caution[注意]
 **这是RSI最大的误区！**
 
 - 超买（RSI > 70）只说明"短期涨得比较多"，**不代表立刻下跌**
@@ -113,7 +107,7 @@ RSI = 100 - 100 / (1 + 2.306) = 100 - 30.3 = 69.7
 - 超买之后还可以更超买——不要仅因为RSI > 70就做空
 
 正确做法：超买/超卖只是预警，需要配合其他信号确认。
-</div>
+:::
 
 ### 用法二：RSI背离（最值钱的信号）⭐
 
@@ -199,13 +193,11 @@ RSI的50线是重要的多空分界线：
 | **RSI(21)** | 中线交易 | 信号稳定，但滞后 |
 | **RSI(25)** | 长线投资 | 非常稳定，信号少 |
 
-<div style="border-left:4px solid #10b981;background:#10b98110;border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0">
-<strong style="color:#10b981">💡 参数建议</strong>
-
+:::tip[提示]
 对于大多数投资者，**RSI(14)** 是最佳选择。这是Wilder最初推荐的参数，经过几十年验证。
 
 短线交易者可以同时看RSI(6)和RSI(14)，当两者同时超买或超卖时信号更可靠。
-</div>
+:::
 
 ## RSI + MACD 组合使用
 
