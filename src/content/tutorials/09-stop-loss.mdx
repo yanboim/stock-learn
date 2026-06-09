@@ -1,282 +1,130 @@
 ---
-title: "止损的艺术：如何保护你的本金"
-description: "为什么止损比止盈更重要？7种实战止损方法详解，帮你建立铁律般的风控纪律"
+title: "止损的艺术：保护本金的第一道防线"
+description: "学会科学的止损方法，用止损保护本金，避免小亏变大亏"
 category: "风险控制"
-tags: ["止损", "风控", "仓位管理", "交易纪律", "本金保护"]
+tags: ["止损", "风险管理", "本金保护", "交易纪律"]
 difficulty: "入门"
 publishDate: 2025-06-08
-order: 1
+order: 5
+icon: "🛡️"
 ---
 
 import RiskCalculator from '../../components/interactive/RiskCalculator';
 
-## 为什么止损比止盈更重要？
+## 为什么止损这么重要？
 
-先看一组残酷的数据：
+**投资的铁律：先求生存，再求盈利。**
 
-| 亏损幅度 | 需要回本的涨幅 |
-|---|---|
-| 亏损 10% | 需要涨 11% 回本 |
-| 亏损 20% | 需要涨 25% 回本 |
-| 亏损 30% | 需要涨 43% 回本 |
-| 亏损 50% | 需要涨 100% 回本 |
-| 亏损 70% | 需要涨 233% 回本 |
-| 亏损 90% | 需要涨 900% 回本 |
+一个残酷的数学事实：
 
-:::caution[核心真理]
-**亏损是复利的，回本是单利的。**
+<div class="illustration">
+  <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+    <text x="300" y="22" text-anchor="middle" font-size="14" fill="#991b1b" font-weight="bold">📉 亏损与回本的残酷数学</text>
 
-亏损50%需要翻倍才能回本。这就是为什么保护本金比追求利润重要一百倍。
+    <rect x="30" y="40" width="540" height="140" rx="10" fill="#fef2f2" stroke="#fecaca"/>
 
-投资的第一原则：不要亏损。
-投资的第二原则：永远记住第一条。
+    <text x="80" y="70" font-size="11" fill="#991b1b" font-weight="bold">亏损 10%</text>
+    <text x="200" y="70" font-size="11" fill="#991b1b">→ 需要涨 11% 才能回本</text>
+    <rect x="370" y="56" width="170" height="18" rx="9" fill="#fef3c7"/>
+    <rect x="370" y="56" width="95" height="18" rx="9" fill="#f59e0b" opacity="0.4"/>
+
+    <text x="80" y="98" font-size="11" fill="#991b1b" font-weight="bold">亏损 20%</text>
+    <text x="200" y="98" font-size="11" fill="#991b1b">→ 需要涨 25% 才能回本</text>
+    <rect x="370" y="84" width="170" height="18" rx="9" fill="#fee2e2"/>
+    <rect x="370" y="84" width="110" height="18" rx="9" fill="#ef4444" opacity="0.4"/>
+
+    <text x="80" y="126" font-size="11" fill="#991b1b" font-weight="bold">亏损 50%</text>
+    <text x="200" y="126" font-size="11" fill="#991b1b">→ 需要涨 100% 才能回本</text>
+    <rect x="370" y="112" width="170" height="18" rx="9" fill="#fee2e2"/>
+    <rect x="370" y="112" width="170" height="18" rx="9" fill="#ef4444" opacity="0.5"/>
+
+    <text x="80" y="158" font-size="12" fill="#dc2626" font-weight="bold">亏损 80%</text>
+    <text x="200" y="158" font-size="12" fill="#dc2626" font-weight="bold">→ 需要涨 400%！几乎不可能！</text>
+    <rect x="370" y="142" width="170" height="18" rx="9" fill="#991b1b"/>
+  </svg>
+  <div class="illustration-caption">亏损越大，回本越难——这就是为什么止损是第一要务</div>
+</div>
+
+:::danger[记住]
+**截断亏损，让利润奔跑。** 亏10%止损是小事，亏50%就是灾难。
 :::
 
-## 🛑 止损计算器
-
-输入你的交易参数，自动计算止损价格和最大亏损：
-
-<RiskCalculator mode="stopLoss" />
-
-## 止损的心理学障碍
-
-为什么大多数人不设止损？
-
-### 心理障碍一："亏了就是没卖"
-
-> "只要不卖，就不是真的亏。"
-
-**真相：** 浮亏就是真亏。账户上的数字不会因为你假装没看见就变回来。
-
-### 心理障碍二："总会长回来的"
-
-> "这只股票总会涨回来的，等等就好。"
-
-**真相：** 很多股票一辈子都涨不回来。中石油从48元跌到现在的不到10元，已经18年了。
-
-### 心理障碍三："卖了就真的亏了"
-
-> "现在卖就是割肉，太疼了。"
-
-**真相：** 小割是止血，大割是截肢。5%的止损叫"止血"，50%的亏损叫"截肢"。
-
-### 心理障碍四："万一止损后就涨了呢？"
-
-> "上次止损后股票就涨了，止损是错的。"
-
-**真相：** 止损是保险费，不是每一次都会"用到"，但它能在致命风险出现时保你的命。
-
-## 7种实战止损方法
-
-### 方法一：固定百分比止损
-
-**最简单、最基础的方法。**
-
-买入后设定一个固定的止损百分比（通常5-8%）：
-
-```
-止损价 = 买入价 × (1 - 止损百分比)
-买入价 = 25元
-止损百分比 = 6%
-止损价 = 25 × 0.94 = 23.5元
-```
-
-| 买入价 | 止损6% | 止损8% | 止损10% |
-|---|---|---|---|
-| 20元 | 18.80 | 18.40 | 18.00 |
-| 50元 | 47.00 | 46.00 | 45.00 |
-| 100元 | 94.00 | 92.00 | 90.00 |
-
-**优点：** 简单明了，容易执行
-**缺点：** 不考虑个股波动性，可能止损过紧或过松
-**适用：** 新手入门、短线交易
-
-### 方法二：均线止损
-
-**利用移动平均线作为止损参考。**
-
-- 短线交易：跌破MA5或MA10止损
-- 波段交易：跌破MA20止损
-- 中线投资：跌破MA60止损
-
-**规则：** 收盘价连续2天在均线下方 → 执行止损
-
-**优点：** 自适应个股波动，趋势交易最常用
-**缺点：** 均线有滞后性
-**适用：** 趋势跟踪交易
-
-### 方法三：技术位止损
-
-**在关键的技术支撑位设置止损。**
-
-常见的支撑位：
-- 前期低点
-- 重要均线
-- 跳空缺口上沿
-- 密集成交区
-- 趋势线支撑
-
-**规则：** 跌破关键支撑位 → 止损
-
-**优点：** 基于市场结构，有技术依据
-**缺点：** 支撑位可能被假跌破
-**适用：** 技术分析交易
-
-### 方法四：ATR止损（波动率止损）
-
-**根据个股波动性动态调整止损幅度。**
-
-```
-ATR（平均真实波幅）= 过去14天价格波动的平均值
-
-止损距离 = 2 × ATR（或 1.5 × ATR）
-止损价 = 买入价 - 止损距离
-```
-
-**举例：**
-```
-某股票ATR = 1.5元
-止损距离 = 2 × 1.5 = 3元
-买入价 = 30元
-止损价 = 30 - 3 = 27元（约10%止损）
-```
-
-波动大的股票ATR大 → 止损距离大
-波动小的股票ATR小 → 止损距离小
-
-**优点：** 自适应个股波动性，最科学
-**缺点：** 计算稍复杂
-**适用：** 所有类型的交易
-
-### 方法五：时间止损
-
-**到了预定时间还没涨就卖。**
-
-规则：买入后N天内没有按预期方向运动 → 止损
-
-| 交易类型 | 时间止损期限 |
-|---|---|
-| 超短线 | 2-3天 |
-| 短线 | 5-7天 |
-| 波段 | 2-3周 |
-| 中线 | 1-2个月 |
-
-**优点：** 避免资金被长期占用
-**缺点：** 可能错过延迟启动的行情
-**适用：** 短线交易、资金利用率要求高的情况
-
-### 方法六：逻辑止损
-
-**买入逻辑被推翻就止损。**
-
-举例：
-- 因为业绩好而买入 → 季报业绩大幅低于预期 → 逻辑失效，止损
-- 因为行业政策利好而买入 → 政策被取消或调整 → 逻辑失效，止损
-- 因为突破关键位而买入 → 跌回关键位以下 → 逻辑失效，止损
-
-**优点：** 最符合投资逻辑
-**缺点：** 需要对基本面有深入研究
-**适用：** 基本面投资、事件驱动交易
-
-### 方法七：移动止损（追踪止损）
-
-**随着价格上涨不断上移止损位，锁定利润。**
-
-```
-规则：止损位 = 最高价 × (1 - 回撤百分比)
-
-回撤百分比：
-保守型：5%
-适中型：8%
-激进型：12-15%
-```
-
-**举例：**
-```
-买入价 = 25元，止损 = 23.5元（-6%）
-涨到28元 → 止损上移到 28 × 0.94 = 26.32元
-涨到30元 → 止损上移到 30 × 0.94 = 28.20元
-涨到32元 → 止损上移到 32 × 0.94 = 30.08元
-回调到30元 → 触发止损，以约30元卖出
-
-结果：买入25元，卖出30元，盈利约20%
-```
-
-**优点：** 既能锁定利润，又能让利润奔跑
-**缺点：** 可能被正常回撤洗出局
-**适用：** 趋势跟踪交易
-
-## 止损的黄金法则
-
-### 法则一：入场前先设好止损
-
-每笔交易在买入之前，就必须想好：
-- 我在什么价格止损？
-- 我能承受多少亏损？
-- 买入逻辑什么情况下失效？
-
-**如果这三个问题回答不了，就不应该买入。**
-
-### 法则二：止损位一到，无脑执行
-
-不要给自己找任何借口：
-- ❌ "明天应该会反弹"
-- ❌ "已经跌这么多了，不可能再跌了"
-- ❌ "主力在洗盘，我要扛住"
-- ❌ "再等等看"
-
-到了止损位，卖就对了。犹豫一秒钟都是对自己不负责任。
-
-### 法则三：单笔亏损不超过总资金的2%
-
-```
-单笔最大亏损 = 总资金 × 2%
-
-总资金 = 10万
-单笔最大亏损 = 2000元
-止损幅度 = 6%
-最大仓位 = 2000 / 6% = 33333元（约1/3仓位）
-```
-
-<RiskCalculator mode="positionSize" />
-
-### 法则四：连续亏损3次就停下来
-
-如果你连续止损3次，说明：
-- 你的交易系统可能不适合当前市场
-- 你的心态可能出了问题
-- 市场环境可能已经改变
-
-**停下来，复盘，调整，再战。**
-
-## 止损常见问题
-
-**Q：止损后又涨回来怎么办？**
-A：这是正常的。止损是保险费，你买保险不会因为没出事就后悔。关键是长期来看，止损能保护你不被一波大跌清出场。
-
-**Q：用涨停板止损可以吗？**
-A：A股有涨跌幅限制（±10%或±20%），遇到跌停板可能卖不出去。这就是为什么不要等到跌停才止损——要提前设好止损位。
-
-**Q：止损后什么时候可以再买回来？**
-A：至少等3天冷静期。如果重新出现了买入信号，可以重新分析后再入场。但不要因为"不甘心"就立刻买回来。
-
-**Q：长线投资需要止损吗？**
-A：需要。但长线投资的止损幅度更大（15-20%），止损标准不同（看基本面变化而非技术面）。巴菲特也会止损——当公司基本面恶化时。
-
-## 止损执行工具
-
-### 券商APP的条件单功能
-
-大多数券商APP都支持设置条件单（也叫止盈止损单、智能交易等）：
-
-1. **价格触发型**：股价跌破X元自动卖出
-2. **回撤触发型**：从最高点回撤Y%自动卖出
-3. **时间触发型**：N天后自动卖出
-
-**建议：** 尽量用条件单而不是手动止损。手动止损需要你盯着盘面，而且人在亏损时容易犹豫不执行。
+## 5种止损方法
+
+<div class="visual-card-grid">
+  <div class="visual-card" style="border-left:4px solid #3b82f6">
+    <strong style="color:#1e40af">📏 固定比例止损</strong>
+    <div style="margin:0.75rem 0;padding:0.5rem;background:#eff6ff;border-radius:0.5rem;text-align:center;font-family:monospace;font-size:0.85rem">
+      买入价 × (1 - 止损比例)
+    </div>
+    <p style="font-size:0.85rem;color:#6b7280;margin:0">如买入价25元，止损7% → 止损价23.25元</p>
+    <span style="font-size:0.75rem;color:#3b82f6">✅ 简单易执行</span>
+  </div>
+  <div class="visual-card" style="border-left:4px solid #10b981">
+    <strong style="color:#065f46">📊 均线止损</strong>
+    <div style="margin:0.75rem 0;padding:0.5rem;background:#f0fdf4;border-radius:0.5rem;text-align:center;font-size:0.85rem">
+      跌破MA20就止损
+    </div>
+    <p style="font-size:0.85rem;color:#6b7280;margin:0">均线是趋势的分界线，跌破说明趋势可能反转</p>
+    <span style="font-size:0.75rem;color:#10b981">✅ 适合波段交易</span>
+  </div>
+  <div class="visual-card" style="border-left:4px solid #8b5cf6">
+    <strong style="color:#5b21b6">📐 关键位止损</strong>
+    <div style="margin:0.75rem 0;padding:0.5rem;background:#ede9fe;border-radius:0.5rem;text-align:center;font-size:0.85rem">
+      跌破支撑位就止损
+    </div>
+    <p style="font-size:0.85rem;color:#6b7280;margin:0">前期低点、整数关口、趋势线等关键支撑位</p>
+    <span style="font-size:0.75rem;color:#8b5cf6">✅ 技术面配合</span>
+  </div>
+  <div class="visual-card" style="border-left:4px solid #f59e0b">
+    <strong style="color:#b45309">💰 移动止损（追踪止损）</strong>
+    <div style="margin:0.75rem 0;padding:0.5rem;background:#fefce8;border-radius:0.5rem;text-align:center;font-size:0.85rem">
+      止损位跟随盈利上移
+    </div>
+    <p style="font-size:0.85rem;color:#6b7280;margin:0">赚了5% → 止损移到成本价；赚了10% → 止损移到+5%</p>
+    <span style="font-size:0.75rem;color:#f59e0b">✅ 让利润奔跑</span>
+  </div>
+</div>
+
+## 止损计算器
+
+用下面的计算器，算出你的止损价和最大亏损：
+
+<RiskCalculator />
+
+## 止损执行的心理障碍
+
+<div class="visual-card" style="background:linear-gradient(135deg,#fef2f2,#fefce8);border-color:#fca5a5">
+  <strong style="color:#991b1b;font-size:1.05rem">🧠 为什么止损这么难？</strong>
+  <div class="comparison-grid" style="margin-top:0.75rem">
+    <div style="background:white;border-radius:0.5rem;padding:0.75rem">
+      <p style="margin:0;font-size:0.85rem;color:#475569"><strong>❌ 常见想法：</strong></p>
+      <p style="margin:0.25rem 0 0;font-size:0.85rem;color:#ef4444">"再等等看，应该会涨回来"</p>
+      <p style="margin:0.25rem 0 0;font-size:0.85rem;color:#ef4444">"已经亏这么多了，现在卖太亏"</p>
+      <p style="margin:0.25rem 0 0;font-size:0.85rem;color:#ef4444">"万一止损后又涨了呢？"</p>
+    </div>
+    <div style="background:white;border-radius:0.5rem;padding:0.75rem">
+      <p style="margin:0;font-size:0.85rem;color:#475569"><strong>✅ 正确想法：</strong></p>
+      <p style="margin:0.25rem 0 0;font-size:0.85rem;color:#047857">"止损是保险费，不是亏损"</p>
+      <p style="margin:0.25rem 0 0;font-size:0.85rem;color:#047857">"小亏10%总比大亏50%好"</p>
+      <p style="margin:0.25rem 0 0;font-size:0.85rem;color:#047857">"保护本金才有下次机会"</p>
+    </div>
+  </div>
+</div>
 
 ## 下一步学习
 
-- 💰 仓位管理 → 《仓位管理：赚钱的隐藏密码》
-- 📊 交易复盘 → 《交易复盘：从每次交易中学习》
-- 📈 波段实战 → 《波段交易实战：从选股到出场的完整流程》
+<div class="visual-card-grid">
+  <a href="/tutorials/10-position-sizing/" style="text-decoration:none;color:inherit">
+    <div class="visual-card" style="border-left:4px solid #10b981">
+      <strong>⚖️ 仓位管理 →</strong>
+      <p style="color:#6b7280;font-size:0.85rem;margin-top:0.5rem">止损+仓位管理 = 完整的风控体系</p>
+    </div>
+  </a>
+  <a href="/tutorials/16-trading-psychology/" style="text-decoration:none;color:inherit">
+    <div class="visual-card" style="border-left:4px solid #8b5cf6">
+      <strong>🧠 交易心理 →</strong>
+      <p style="color:#6b7280;font-size:0.85rem;margin-top:0.5rem">克服止损心理障碍的方法</p>
+    </div>
+  </a>
+</div>

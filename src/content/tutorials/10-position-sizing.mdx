@@ -1,266 +1,123 @@
 ---
 title: "仓位管理：赚钱的隐藏密码"
-description: "为什么仓位管理比选股更重要？学会分散投资、分批建仓、动态调仓，用仓位管理控制风险放大收益"
+description: "学会科学管理仓位，用凯利公式和风险收益比计算最优仓位，避免满仓赌博"
 category: "风险控制"
-tags: ["仓位管理", "分散投资", "分批建仓", "凯利公式", "动态调仓", "风控"]
-difficulty: "进阶"
+tags: ["仓位管理", "凯利公式", "风险收益比", "资金管理"]
+difficulty: "入门"
 publishDate: 2025-06-08
-order: 2
+order: 6
+icon: "⚖️"
 ---
 
 import RiskCalculator from '../../components/interactive/RiskCalculator';
 
 ## 为什么仓位管理比选股更重要？
 
-先做一个思想实验：
+一个惊人的事实：**即使你的胜率只有50%，好的仓位管理也能让你稳定盈利。**
 
-你有两只股票各50%概率赚钱：
-- 股票A：赚50%或亏50%
-- 股票B：赚20%或亏10%
+反之，即使你的胜率70%，差的仓位管理也可能让你爆仓。
 
-如果你把所有钱押在股票A上：
-- 赢了：100万变150万
-- 输了：100万变50万
+<div class="illustration">
+  <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+    <text x="300" y="22" text-anchor="middle" font-size="14" fill="#1f2937" font-weight="bold">🎯 仓位管理的威力：同样的选股，不同的结果</text>
 
-但如果你只用20%仓位买股票A，80%买股票B呢？
-- A赢了B赢了：108万（+8%）
-- A赢了B输了：102万（+2%）
-- A输了B赢了：88万（-12%）
-- A输了B输了：82万（-18%）
+    <rect x="20" y="45" width="270" height="130" rx="10" fill="#fef2f2" stroke="#fecaca"/>
+    <text x="155" y="70" text-anchor="middle" font-size="12" fill="#991b1b" font-weight="bold">❌ 满仓一只股</text>
+    <text x="155" y="92" text-anchor="middle" font-size="10" fill="#6b7280">10万全买一只，跌30%</text>
+    <text x="155" y="115" text-anchor="middle" font-size="22" fill="#dc2626" font-weight="bold">-3万</text>
+    <text x="155" y="140" text-anchor="middle" font-size="10" fill="#ef4444">剩余7万，需涨43%才能回本</text>
+    <text x="155" y="160" text-anchor="middle" font-size="9" fill="#991b1b">一旦判断错误，损失惨重</text>
 
-你看，通过仓位管理，最差情况从亏50%变成了亏18%。
-
-:::tip[核心真理]
-**选股决定了你能不能赚钱，仓位管理决定了你能活多久。**
-
-一个好的仓位管理系统可以让你在选错股票时少亏，在选对股票时多赚。
-:::
+    <rect x="310" y="45" width="270" height="130" rx="10" fill="#f0fdf4" stroke="#bbf7d0"/>
+    <text x="445" y="70" text-anchor="middle" font-size="12" fill="#065f46" font-weight="bold">✅ 仓位管理（20%一只）</text>
+    <text x="445" y="92" text-anchor="middle" font-size="10" fill="#6b7280">2万买一只，跌30%</text>
+    <text x="445" y="115" text-anchor="middle" font-size="22" fill="#047857" font-weight="bold">-6,000</text>
+    <text x="445" y="140" text-anchor="middle" font-size="10" fill="#10b981">剩余9.4万，只需涨6.4%回本</text>
+    <text x="445" y="160" text-anchor="middle" font-size="9" fill="#065f46">风险可控，不影响心态</text>
+  </svg>
+  <div class="illustration-caption">仓位管理就是给你的投资系上安全带</div>
+</div>
 
 ## 仓位管理的核心原则
 
-### 原则一：永远不满仓
+<div class="visual-card-grid">
+  <div class="feature-box">
+    <div class="feature-icon feature-icon-red">🚫</div>
+    <div>
+      <strong>单只股票不超过总仓位的20%</strong>
+      <p style="color:#6b7280;font-size:0.85rem;margin:0.25rem 0 0">分散风险，避免单一标的的黑天鹅</p>
+    </div>
+  </div>
+  <div class="feature-box">
+    <div class="feature-icon feature-icon-orange">⚡</div>
+    <div>
+      <strong>单笔交易最大亏损不超过总资金2%</strong>
+      <p style="color:#6b7280;font-size:0.85rem;margin:0.25rem 0 0">控制每笔交易的伤害值</p>
+    </div>
+  </div>
+  <div class="feature-box">
+    <div class="feature-icon feature-icon-green">📊</div>
+    <div>
+      <strong>信号强弱决定仓位大小</strong>
+      <p style="color:#6b7280;font-size:0.85rem;margin:0.25rem 0 0">信号越强仓位越大，信号弱轻仓试水</p>
+    </div>
+  </div>
+  <div class="feature-box">
+    <div class="feature-icon feature-icon-blue">📈</div>
+    <div>
+      <strong>盈利加仓、亏损减仓</strong>
+      <p style="color:#6b7280;font-size:0.85rem;margin:0.25rem 0 0">顺势加仓，逆势减仓，绝不逆势补仓</p>
+    </div>
+  </div>
+</div>
 
-| 总仓位 | 市场状态 | 含义 |
-|---|---|---|
-| **100%** | 极度看多 | 几乎不应该出现 |
-| **70-80%** | 看多 | 强势行情 |
-| **50-60%** | 中性 | 正常市场 |
-| **30-40%** | 谨慎 | 震荡市 |
-| **10-20%** | 看空 | 弱势行情 |
-| **0%** | 极度看空 | 空仓观望 |
+## 凯利公式：最优仓位计算
 
-### 原则二：单只股票仓位上限
+凯利公式告诉你数学上最优的仓位比例：
 
-| 资金规模 | 单只上限 | 建议持仓数量 |
-|---|---|---|
-| 10万以下 | 20% | 3-5只 |
-| 10-50万 | 15% | 5-8只 |
-| 50-100万 | 10% | 8-12只 |
-| 100万以上 | 5-8% | 10-15只 |
+<div class="visual-card" style="background:#eff6ff;border-color:#bfdbfe;text-align:center">
+  <strong style="color:#1e40af;font-size:1.1rem">📐 凯利公式</strong>
+  <div style="margin:1rem 0;padding:1rem;background:white;border-radius:0.75rem;display:inline-block">
+    <span style="font-size:1.3rem;font-weight:bold;color:#1e40af">f = (bp - q) / b</span>
+  </div>
+  <div style="margin-top:0.5rem;font-size:0.85rem;color:#475569">
+    <p style="margin:0.25rem 0"><strong>f</strong> = 最优仓位比例</p>
+    <p style="margin:0.25rem 0"><strong>b</strong> = 盈亏比（赚多少/亏多少）</p>
+    <p style="margin:0.25rem 0"><strong>p</strong> = 胜率</p>
+    <p style="margin:0.25rem 0"><strong>q</strong> = 1 - 胜率（败率）</p>
+  </div>
+</div>
 
-### 原则三：单笔最大亏损
-
-**铁律：单笔亏损不超过总资金的2%**
-
-```
-单笔最大亏损 = 总资金 × 2%
-
-10万资金 → 单笔最多亏2000元
-50万资金 → 单笔最多亏10000元
-100万资金 → 单笔最多亏20000元
-```
-
-## 💰 仓位计算器
-
-根据你的风险容忍度，计算每笔交易应该投入多少资金：
-
-<RiskCalculator mode="positionSize" />
-
-## 仓位管理实战方法
-
-### 方法一：等权分配法
-
-**最简单的仓位管理方法。**
-
-把资金平均分配到N只股票上：
-- 10万资金，买5只股票 → 每只2万
-
-**优点：** 简单，分散风险
-**缺点：** 不考虑不同股票的风险差异
-
-### 方法二：风险平价法
-
-**根据风险大小分配仓位。**
-
-```
-核心思路：每只股票的风险贡献相同
-
-波动大的股票 → 小仓位
-波动小的股票 → 大仓位
-```
-
-**举例：**
-- 股票A：日波动率2% → 仓位15%
-- 股票B：日波动率1% → 仓位30%
-- 股票C：日波动率3% → 仓位10%
-
-三只股票的风险贡献大致相同（2%×15% ≈ 1%×30% ≈ 3%×10%）
-
-### 方法三：凯利公式
-
-**数学上最优的仓位计算方法。**
-
-```
-最优仓位比例 = (胜率×平均盈利比 - 败率×平均亏损比) / 平均盈利比
-
-简化版：
-f = (p × b - q) / b
-
-p = 胜率
-q = 败率 = 1 - p
-b = 盈亏比（平均盈利/平均亏损）
-```
-
-**举例：**
-```
-胜率 = 50%（p = 0.5）
-平均盈利 = 15%
-平均亏损 = 5%
-盈亏比 = 3:1（b = 3）
-
-凯利仓位 = (0.5 × 3 - 0.5) / 3 = 1.0 / 3 = 33.3%
-```
-
-:::caution[凯利公式的风险]
-凯利公式给出的是数学上最优的仓位，但实际使用中应该用 **半凯利**（即凯利值的一半），因为：
-1. 你的胜率估算可能不准确
-2. 凯利值的波动极大，心理上很难承受
-3. 半凯利能在保持大部分收益的同时大幅降低波动
+:::tip[实战建议]
+实际操作中，使用**半凯利**（凯利值的一半）更安全。比如凯利算出20%仓位，实际用10%。
 :::
 
-### 方法四：分批建仓法
+## 风险收益比计算器
 
-**不一次性买入，分多次建仓。**
+<RiskCalculator />
 
-**金字塔加仓法：**
+## 仓位管理速查表
 
-```
-第一次买入：50%仓位（底仓）
-确认趋势后加仓：30%
-趋势加速再加：20%
-
-（越买越少，成本在底部）
-```
-
-**倒金字塔加仓（不推荐）：**
-```
-第一次买入：20%
-加仓：30%
-再加仓：50%
-
-（越买越多，成本在顶部，风险极大）
-```
-
-**为什么金字塔加仓更好？**
-
-```
-例子：股价从25元涨到30元
-
-金字塔加仓：
-25元买50% = 均价25
-28元买30% = 均价26.2
-30元买20% = 均价27.0
-综合均价约 26.0元
-
-倒金字塔加仓：
-25元买20% = 均价25
-28元买30% = 均价27.0
-30元买50% = 均价29.2
-综合均价约 29.2元
-```
-
-金字塔加仓的均价远低于倒金字塔。
-
-### 方法五：动态调仓法
-
-**根据市场状态动态调整总仓位。**
-
-| 市场信号 | 操作 |
-|---|---|
-| 均线多头排列 + MACD零轴上方 | 总仓位70-80% |
-| 均线走平 + MACD在零轴附近 | 总仓位50% |
-| 均线空头排列 + MACD零轴下方 | 总仓位20-30% |
-| 出现恐慌性大跌 | 总仓位降到10%以下 |
-
-## ⚖️ 风险收益比计算器
-
-在每笔交易前，用这个计算器评估值不值得做：
-
-<RiskCalculator mode="riskReward" />
-
-## 分散投资的艺术
-
-### 行业分散
-
-不要把所有钱都买同一行业的股票：
-
-| 分散程度 | 示例 | 评价 |
-|---|---|---|
-| **同行业3只** | 茅台+五粮液+泸州老窖 | ❌ 不算分散 |
-| **2-3个行业** | 消费+科技+银行 | ✅ 基本分散 |
-| **4-5个行业** | 消费+科技+医药+新能源+金融 | ✅ 充分分散 |
-| **超过8个行业** | 分散到太多行业 | ⚠️ 过度分散 |
-
-### 风格分散
-
-同时配置不同风格的股票：
-- 价值股（低PE、高股息）
-- 成长股（高增长、高估值）
-- 防御股（波动小、稳定）
-
-### 时间分散
-
-不要在同一天把所有钱买完：
-- 分3-5个交易日建仓
-- 每次建仓间隔1-2天
-- 如果市场大跌，可以趁低价多买一点
-
-## 复利的力量
-
-<RiskCalculator mode="compound" />
-
-**看看这个对比：**
-
-| 场景 | 月收益率 | 1年后 | 3年后 | 5年后 |
-|---|---|---|---|---|
-| **保守** | 1% | 11.3万 | 13.6万 | 16.3万 |
-| **稳健** | 3% | 14.3万 | 23.0万 | 37.0万 |
-| **激进** | 5% | 17.9万 | 38.2万 | 81.4万 |
-
-初始资金10万，每月追加5000元。注意：激进收益意味着更大的风险。
-
-:::caution[复利的另一面]
-复利在亏损时同样可怕：
-
-亏损5% → 需要赚5.3%回本
-每月亏2%，一年后资金缩水21.5%
-每月亏5%，一年后资金缩水45.8%
-
-这就是为什么保护本金比追求收益更重要。
-:::
-
-## 仓位管理检查清单
-
-1. ✅ 永远不满仓，保留至少20%现金
-2. ✅ 单只股票不超过总资金的15-20%
-3. ✅ 单笔亏损不超过总资金的2%
-4. ✅ 分散到至少3-5个不同行业
-5. ✅ 用金字塔法分批建仓
-6. ✅ 根据市场状态动态调整总仓位
-7. ✅ 每笔交易前计算风险收益比，至少2:1
+| 总资金 | 单笔最大亏损2% | 单只最大仓位20% | 止损7%对应股数 |
+|---|---|---|---|
+| 5万 | 1,000元 | 1万 | ~570股 |
+| 10万 | 2,000元 | 2万 | ~1,140股 |
+| 20万 | 4,000元 | 4万 | ~2,280股 |
+| 50万 | 10,000元 | 10万 | ~5,710股 |
 
 ## 下一步学习
 
-- 🛑 止损方法 → 《止损的艺术：如何保护你的本金》
-- 📊 交易复盘 → 《交易复盘：从每次交易中学习》
-- 📈 波段实战 → 《波段交易实战：从选股到出场的完整流程》
+<div class="visual-card-grid">
+  <a href="/tutorials/08-trading-system/" style="text-decoration:none;color:inherit">
+    <div class="visual-card" style="border-left:4px solid #10b981">
+      <strong>⚙️ 交易系统 →</strong>
+      <p style="color:#6b7280;font-size:0.85rem;margin-top:0.5rem">把仓位管理融入你的交易系统</p>
+    </div>
+  </a>
+  <a href="/tutorials/17-swing-trading-case/" style="text-decoration:none;color:inherit">
+    <div class="visual-card" style="border-left:4px solid #f59e0b">
+      <strong>🎯 波段实战 →</strong>
+      <p style="color:#6b7280;font-size:0.85rem;margin-top:0.5rem">看看实战中仓位管理怎么用</p>
+    </div>
+  </a>
+</div>
