@@ -1,244 +1,166 @@
 ---
-title: "均线系统：趋势的方向标"
-description: "从MA5到MA250，系统学习移动平均线的原理、用法和实战策略，用均线判断趋势方向"
+title: "移动平均线：跟随趋势的方向标"
+description: "学会使用MA5、MA10、MA20等移动平均线判断趋势方向、找到买卖点"
 category: "技术指标"
-tags: ["均线", "MA", "移动平均线", "趋势", "金叉", "死叉", "技术分析"]
+tags: ["均线", "MA", "移动平均线", "趋势", "金叉死叉"]
 difficulty: "入门"
 publishDate: 2025-06-08
-order: 2
+order: 3
+icon: "📊"
 ---
 
 import InteractiveChart from '../../components/interactive/InteractiveChart';
-import IndicatorDemo from '../../components/interactive/IndicatorDemo';
 
 ## 什么是移动平均线？
 
-移动平均线（Moving Average，简称MA）是最基础、最常用、也最重要的技术指标。它把一段时间内的价格"平均化"，过滤掉短期波动，帮你看到价格的真实趋势。
+移动平均线（MA）就是把最近N天的收盘价加在一起，除以N，得到一个"平均值"。每天计算一次，连成一条线。
 
-**用生活类比：**
+**它的本质是：把价格的"噪音"过滤掉，让你看清趋势方向。**
 
-想象你每天量体重。单看每天的数字波动很大（吃多了重一斤、出汗了轻半斤）。但如果你看"最近10天的平均体重"，数字就会平滑很多，能清楚看出你的体重是在上升还是下降。
+<div class="illustration">
+  <svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+    <text x="300" y="25" text-anchor="middle" font-size="14" fill="#1f2937" font-weight="bold">均线：过滤噪音，看清趋势</text>
 
-**这个"最近10天的平均体重"就是一条移动平均线。**
+    <path d="M30,140 L50,120 L70,155 L90,105 L110,135 L130,90 L150,125 L170,80 L190,110 L210,70 L230,100 L250,55 L270,85 L290,50 L310,75 L330,45 L350,65 L370,40 L390,55 L410,35 L430,50 L450,30 L470,45 L490,25 L510,40 L530,20 L550,35 L570,15" 
+          stroke="#cbd5e1" stroke-width="1.5" fill="none"/>
+    <text x="300" y="175" text-anchor="middle" font-size="10" fill="#94a3b8">原始价格（波动大、噪音多）</text>
 
-:::tip[一句话理解]
-均线 = 价格的"平滑器"。它帮你过滤掉噪音，看清趋势方向。
+    <path d="M30,150 L70,135 L110,120 L150,108 L190,98 L230,88 L270,75 L310,65 L350,55 L390,48 L430,42 L470,37 L510,33 L550,28" 
+          stroke="#3b82f6" stroke-width="2.5" fill="none"/>
+    <text x="570" y="40" font-size="10" fill="#3b82f6" font-weight="bold">MA5</text>
+
+    <path d="M30,165 L110,145 L190,125 L270,105 L350,88 L430,72 L510,58 L570,50" 
+          stroke="#f59e0b" stroke-width="2.5" fill="none" stroke-dasharray="8,4"/>
+    <text x="570" y="62" font-size="10" fill="#f59e0b" font-weight="bold">MA20</text>
+
+    <rect x="50" y="195" width="500" height="70" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+    <circle cx="80" cy="218" r="5" fill="#cbd5e1"/>
+    <text x="95" y="222" font-size="11" fill="#64748b">灰色线 = 每日收盘价（波动大）</text>
+    <circle cx="80" cy="240" r="5" fill="#3b82f6"/>
+    <text x="95" y="244" font-size="11" fill="#3b82f6" font-weight="bold">蓝色线 = MA5（5日均线，跟随紧）</text>
+    <circle cx="320" cy="240" r="5" fill="#f59e0b"/>
+    <text x="335" y="244" font-size="11" fill="#f59e0b" font-weight="bold">黄色线 = MA20（20日均线，更平滑）</text>
+  </svg>
+  <div class="illustration-caption">均线就像"平均滤镜"——周期越长的均线越平滑，越能看清大趋势</div>
+</div>
+
+### 常用均线周期
+
+<div class="visual-card-grid">
+  <div class="feature-box">
+    <div class="feature-icon feature-icon-blue">5</div>
+    <div>
+      <strong>MA5（周线）</strong>
+      <p style="color:#6b7280;font-size:0.85rem;margin:0.25rem 0 0">最近5天均价，反应最快，适合超短线</p>
+    </div>
+  </div>
+  <div class="feature-box">
+    <div class="feature-icon feature-icon-green">10</div>
+    <div>
+      <strong>MA10（双周线）</strong>
+      <p style="color:#6b7280;font-size:0.85rem;margin:0.25rem 0 0">最近10天均价，短线参考</p>
+    </div>
+  </div>
+  <div class="feature-box">
+    <div class="feature-icon feature-icon-orange">20</div>
+    <div>
+      <strong>MA20（月线）</strong>
+      <p style="color:#6b7280;font-size:0.85rem;margin:0.25rem 0 0">最近20天均价，波段交易的生命线</p>
+    </div>
+  </div>
+  <div class="feature-box">
+    <div class="feature-icon feature-icon-purple">60</div>
+    <div>
+      <strong>MA60（季线）</strong>
+      <p style="color:#6b7280;font-size:0.85rem;margin:0.25rem 0 0">最近60天均价，中线趋势的分水岭</p>
+    </div>
+  </div>
+</div>
+
+## 金叉与死叉
+
+**金叉**和**死叉**是均线系统最重要的两个信号。
+
+<div class="comparison-grid">
+  <div class="comparison-positive">
+    <svg viewBox="0 0 200 120" style="height:80px;display:block;margin:0 auto 8px">
+      <path d="M20,90 L80,70 L140,40 L190,20" stroke="#f59e0b" stroke-width="2" fill="none"/>
+      <path d="M20,30 L80,50 L140,60 L190,70" stroke="#3b82f6" stroke-width="2" fill="none"/>
+      <circle cx="95" cy="57" r="6" fill="none" stroke="#10b981" stroke-width="2"/>
+      <text x="95" y="105" text-anchor="middle" font-size="12" fill="#065f46" font-weight="bold">✅ 金叉</text>
+    </svg>
+    <p style="font-size:0.85rem;color:#065f46;margin:0"><strong>短均线上穿长均线</strong> → 买入信号</p>
+    <p style="font-size:0.8rem;color:#6b7280;margin:0.25rem 0 0">短期动能转强，趋势可能向上</p>
+  </div>
+  <div class="comparison-negative">
+    <svg viewBox="0 0 200 120" style="height:80px;display:block;margin:0 auto 8px">
+      <path d="M20,20 L80,40 L140,60 L190,80" stroke="#f59e0b" stroke-width="2" fill="none"/>
+      <path d="M20,80 L80,60 L140,40 L190,25" stroke="#3b82f6" stroke-width="2" fill="none"/>
+      <circle cx="95" cy="53" r="6" fill="none" stroke="#ef4444" stroke-width="2"/>
+      <text x="95" y="105" text-anchor="middle" font-size="12" fill="#991b1b" font-weight="bold">❌ 死叉</text>
+    </svg>
+    <p style="font-size:0.85rem;color:#991b1b;margin:0"><strong>短均线下穿长均线</strong> → 卖出信号</p>
+    <p style="font-size:0.8rem;color:#6b7280;margin:0.25rem 0 0">短期动能转弱，趋势可能向下</p>
+  </div>
+</div>
+
+:::tip[使用注意]
+金叉/死叉信号有滞后性——当金叉出现时，股价可能已经涨了一段。所以均线系统更适合确认趋势，而不是精确抄底。
 :::
 
-## 均线的计算方法
+## 📊 交互式均线图表
 
-### 简单移动平均线（SMA）
+<InteractiveChart showMA={true} showMACD={true} showVolume={true} height={350} />
 
-最基础的均线，就是把N天的收盘价加起来除以N：
-
-```
-MA5 = (今日收盘 + 昨日收盘 + 前日收盘 + ... + 5天前收盘) / 5
-```
-
-**具体演算：**
-
-假设某股票最近5天收盘价为：25.0, 25.5, 24.8, 26.0, 26.3
-
-```
-MA5 = (25.0 + 25.5 + 24.8 + 26.0 + 26.3) / 5 = 127.6 / 5 = 25.52
-```
-
-如果第6天收盘价为 26.8：
-```
-新MA5 = (25.5 + 24.8 + 26.0 + 26.3 + 26.8) / 5 = 129.4 / 5 = 25.88
-```
-
-注意：计算新MA5时，去掉了最老的25.0，加入了最新的26.8——这就是"移动"的含义。
-
-### 指数移动平均线（EMA）
-
-EMA给最近的价格更大的权重，反应更灵敏：
-
-```
-EMA(今日) = 收盘价 × K + EMA(昨日) × (1 - K)
-K = 2 / (N + 1)
-```
-
-**EMA12的例子：**
-```
-K = 2 / 13 = 0.1538
-EMA(今日) = 今日收盘价 × 0.1538 + 昨日EMA × 0.8462
-```
-
-**SMA vs EMA 的区别：**
-
-| 特性 | SMA | EMA |
-|---|---|---|
-| **计算方式** | 所有天数等权 | 近期价格权重更大 |
-| **反应速度** | 较慢 | 较快 |
-| **平滑程度** | 更平滑 | 略有波动 |
-| **适用场景** | 趋势判断 | 短线交易 |
-| **常用指标** | 均线系统 | MACD计算 |
-
-## 📊 交互式均线演示
-
-下面是一个实时可操作的K线图，点击 **MA均线** 按钮查看不同周期的均线叠加效果：
-
-<InteractiveChart showMA={true} showVolume={true} height={350} />
-
-:::tip[操作提示]
-观察不同周期均线的排列方式：
-- **多头排列**（MA5 > MA10 > MA20 > MA60）= 上涨趋势
-- **空头排列**（MA5 < MA10 < MA20 < MA60）= 下跌趋势
+:::note[观察要点]
+1. 股价在MA20以上 → 短期趋势偏多
+2. MA5金叉MA20 → 买入信号增强
+3. MA5死叉MA20 → 考虑减仓
+4. 股价跌破MA60 → 中线趋势转弱
 :::
 
-## 常用均线周期及含义
+## 三种经典均线策略
 
-### 短期均线（判断短期趋势）
-
-| 均线 | 含义 | 用途 |
-|---|---|---|
-| **MA5** | 一周均价 | 超短线参考，价格在MA5以上=短期偏强 |
-| **MA10** | 两周均价 | 短线趋势参考，常用买入止损位 |
-| **MA20** | 一个月均价 | **波段交易的生命线**，最常用的短期均线 |
-
-### 中期均线（判断中期趋势）
-
-| 均线 | 含义 | 用途 |
-|---|---|---|
-| **MA60** | 一个季度均价 | **中线趋势分水岭**，站上MA60=中线看多 |
-| **MA120** | 半年均价 | 牛熊分界线参考 |
-
-### 长期均线（判断长期趋势）
-
-| 均线 | 含义 | 用途 |
-|---|---|---|
-| **MA250** | 一年均价 | **牛熊分界线**，年线之上=长期看多 |
-
-## 均线的四大核心信号
-
-### 信号一：金叉与死叉
-
-**金叉（买入信号）：** 短期均线从下方穿越长期均线
-
-最有力的金叉组合：
-- **MA5上穿MA20** → 短期趋势转多
-- **MA20上穿MA60** → 中期趋势转多（更可靠）
-
-**死叉（卖出信号）：** 短期均线从上方穿越长期均线
-
-- **MA5下穿MA20** → 短期趋势转空
-- **MA20下穿MA60** → 中期趋势转空（更可靠）
-
-:::caution[注意]
-均线金叉和死叉是**滞后信号**——等到均线交叉时，价格已经走了一段。所以均线适合确认趋势，不适合精确抄底逃顶。
-:::
-
-### 信号二：均线排列
-
-**多头排列：** MA5 > MA10 > MA20 > MA60 > MA120
-→ 所有周期的趋势都向上，最强趋势确认
-
-**空头排列：** MA5 < MA10 < MA20 < MA60 < MA120
-→ 所有周期的趋势都向下，最强下跌确认
-
-**粘合后发散：** 多条均线纠缠在一起后突然向一个方向发散
-→ 趋势即将启动的重要信号
-
-### 信号三：均线支撑和压力
-
-在上涨趋势中，均线往往成为价格的**支撑位**：
-- 价格回调到MA20附近后反弹 → MA20支撑有效
-- 价格回调到MA60附近后反弹 → MA60是更强的支撑
-
-在下跌趋势中，均线往往成为价格的**压力位**：
-- 价格反弹到MA20附近后回落 → MA20压力有效
-- 价格反弹到MA60附近后回落 → MA60是更强的压力
-
-### 信号四：均线斜率
-
-均线的斜率（陡峭程度）反映趋势的强度：
-
-- **斜率向上且陡峭** → 强势上涨
-- **斜率向上但平缓** → 温和上涨
-- **斜率接近水平** → 震荡或趋势不明
-- **斜率向下** → 下跌趋势
-
-## 均线实战交易策略
-
-### 策略一：MA20波段交易法
-
-这是最经典的波段交易策略：
-
-**买入条件：**
-1. 股价站上MA20
-2. MA20斜率向上
-3. 成交量放大
-
-**持有条件：**
-- 股价在MA20以上运行
-- MA20保持向上
-
-**卖出条件：**
-- 股价跌破MA20（收盘价）
-- 或MA20斜率开始走平/向下
-
-**止损：** 买入当天或前一个低点下方
-
-**模拟案例：** 某消费股长期在MA20以下运行，突然放量突破MA20（25元），MA20开始拐头向上。在25.5元买入，止损设在24元（MA20下方）。随后股价沿着MA20上涨到28元、30元。某天收盘跌破MA20（29元），卖出获利。
-
-### 策略二：双均线交叉系统
-
-使用MA5和MA20两条均线：
-
-**买入：** MA5上穿MA20（金叉）
-**卖出：** MA5下穿MA20（死叉）
-
-**优化条件：**
-- 只在MA60以上做金叉买入（顺势交易）
-- MA60以下不做（逆势容易被套）
-
-### 策略三：均线多头排列追涨
-
-**条件：**
-1. MA5 > MA10 > MA20 > MA60（完美多头排列）
-2. 放量突破近期高点
-3. MACD在零轴以上
-
-**入场：** 突破当天或次日回调时
-**止损：** 跌破MA10
-**止盈：** 止损幅度的2-3倍
-
-:::caution[追涨风险]
-均线多头排列追涨适合强趋势股，但如果趋势已经是末期（均线过度发散），追涨风险很大。配合MACD判断动量是否还在。
-:::
-
-## 不同市场环境下的均线用法
-
-| 市场环境 | 均线表现 | 使用建议 |
-|---|---|---|
-| **强趋势上涨** | 价格沿MA5/MA10上涨 | 每次回调到MA10/MA20都是买点 |
-| **温和上涨** | 价格沿MA20上涨 | MA20是核心支撑 |
-| **宽幅震荡** | 均线反复交叉 | 减少操作，等趋势明确 |
-| **强趋势下跌** | 均线空头排列 | 不参与，等待均线走平 |
-| **底部区域** | 长期均线走平，短期均线上穿 | 开始关注，分批建仓 |
-
-## 均线的局限性
-
-1. **滞后性** — 均线是跟随指标，永远落后于价格。当均线发出信号时，最佳入场点已经过去。
-2. **震荡市失效** — 在横盘震荡中，均线反复交叉，频繁发出假信号。
-3. **不同个股参数不同** — 有些股票MA20有效，有些MA30才有效，需要根据个股调整。
-4. **突发事件无效** — 遇到重大利好/利空消息，均线完全来不及反应。
-
-**解决方法：** 均线 + MACD + 成交量 + K线形态，多维度确认。
-
-## 实战检查清单
-
-1. ✅ 先看MA60/MA120判断大趋势方向
-2. ✅ 多头排列时做多，空头排列时不做
-3. ✅ MA20是波段交易的核心参考线
-4. ✅ 均线金叉/死叉要等收盘确认
-5. ✅ 均线斜率比位置更重要（方向比绝对值重要）
-6. ✅ 价格远离均线时注意回归风险
-7. ✅ 震荡市减少使用均线信号
+<div class="visual-card-grid">
+  <div class="visual-card" style="border-top:4px solid #10b981">
+    <strong style="color:#065f46">Strategy 1: 均线多头排列</strong>
+    <div style="margin:0.75rem 0;padding:0.5rem;background:#f0fdf4;border-radius:0.5rem;font-family:monospace;font-size:0.8rem;text-align:center">
+      MA5 &gt; MA10 &gt; MA20 &gt; MA60<br/>
+      <span style="color:#10b981">↑ 强势上涨趋势，持股为主</span>
+    </div>
+    <p style="font-size:0.85rem;color:#6b7280;margin:0">所有均线向上发散，类似"打开的扇子"——最强的上涨信号</p>
+  </div>
+  <div class="visual-card" style="border-top:4px solid #ef4444">
+    <strong style="color:#991b1b">Strategy 2: 均线空头排列</strong>
+    <div style="margin:0.75rem 0;padding:0.5rem;background:#fef2f2;border-radius:0.5rem;font-family:monospace;font-size:0.8rem;text-align:center">
+      MA5 &lt; MA10 &lt; MA20 &lt; MA60<br/>
+      <span style="color:#ef4444">↓ 强势下跌趋势，观望为主</span>
+    </div>
+    <p style="font-size:0.85rem;color:#6b7280;margin:0">所有均线向下发散——不要试图接飞刀</p>
+  </div>
+  <div class="visual-card" style="border-top:4px solid #f59e0b">
+    <strong style="color:#b45309">Strategy 3: 均线粘合突破</strong>
+    <div style="margin:0.75rem 0;padding:0.5rem;background:#fefce8;border-radius:0.5rem;font-family:monospace;font-size:0.8rem;text-align:center">
+      MA5 ≈ MA10 ≈ MA20<br/>
+      <span style="color:#f59e0b">→ 即将选择方向，密切关注</span>
+    </div>
+    <p style="font-size:0.85rem;color:#6b7280;margin:0">均线缠绕在一起 → 大行情的前兆，突破方向决定操作</p>
+  </div>
+</div>
 
 ## 下一步学习
 
-- 📊 MACD指标 → 《MACD指标：趋势与动量的完美结合》
-- 📊 成交量 → 《成交量：价格的真相指标》
-- 📈 趋势线 → 《趋势线与形态：画出市场的轨道》
+<div class="visual-card-grid">
+  <a href="/tutorials/05-macd-indicator/" style="text-decoration:none;color:inherit">
+    <div class="visual-card" style="border-left:4px solid #8b5cf6">
+      <strong>📈 MACD指标 →</strong>
+      <p style="color:#6b7280;font-size:0.85rem;margin-top:0.5rem">均线的进阶版，更灵敏的趋势指标</p>
+    </div>
+  </a>
+  <a href="/tutorials/14-trendlines-patterns/" style="text-decoration:none;color:inherit">
+    <div class="visual-card" style="border-left:4px solid #f59e0b">
+      <strong>📐 趋势线与形态 →</strong>
+      <p style="color:#6b7280;font-size:0.85rem;margin-top:0.5rem">均线 + 趋势线的组合威力</p>
+    </div>
+  </a>
+</div>

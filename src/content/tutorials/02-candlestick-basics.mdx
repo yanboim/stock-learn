@@ -1,258 +1,253 @@
 ---
-title: "K线图入门：读懂市场的语言"
-description: "从一根K线到组合形态，用最直观的方式教你读懂K线图，识别市场多空力量变化"
+title: "K线图入门：读懂市场的心跳"
+description: "零基础学会看K线图，理解阴阳线、上下影线的含义，掌握10种经典K线形态"
 category: "基础入门"
-tags: ["K线", "技术分析", "蜡烛图", "阳线", "阴线", "K线形态"]
+tags: ["K线", "阴阳线", "技术分析", "图表", "形态"]
 difficulty: "入门"
 publishDate: 2025-06-08
 order: 2
+icon: "🕯️"
 ---
 
 import InteractiveChart from '../../components/interactive/InteractiveChart';
 
-## 什么是K线？
+## 什么是K线图？
 
-K线就像市场的**日记**，每一根K线记录了一个时间段内的四种价格：
+K线图是股票市场最基础的"语言"。学会看K线，就像学会了读心术——你能从一根根蜡烛般的图形中读出买卖双方的力量对比。
 
-- **开盘价** — 这个时间段的第一笔交易价格
-- **收盘价** — 这个时间段的最后一笔交易价格
-- **最高价** — 这个时间段内的最高成交价
-- **最低价** — 这个时间段内的最低成交价
+<div class="illustration">
+  <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+    <text x="300" y="25" text-anchor="middle" font-size="14" fill="#1f2937" font-weight="bold">K线的诞生：一根蜡烛记录一天的故事</text>
 
-### 一根K线的诞生
+    <g transform="translate(100,40)">
+      <text x="65" y="15" text-anchor="middle" font-size="13" fill="#dc2626" font-weight="bold">阳线（上涨）🔴</text>
+      <line x1="65" y1="30" x2="65" y2="60" stroke="#dc2626" stroke-width="2"/>
+      <rect x="40" y="60" width="50" height="100" rx="3" fill="#dc2626" opacity="0.85"/>
+      <line x1="65" y1="160" x2="65" y2="210" stroke="#dc2626" stroke-width="2"/>
+      <text x="110" y="35" font-size="10" fill="#9ca3af">最高价 →</text>
+      <text x="110" y="115" font-size="10" fill="#dc2626" font-weight="bold">收盘价 →</text>
+      <text x="110" y="165" font-size="10" fill="#dc2626" font-weight="bold">开盘价 →</text>
+      <text x="110" y="215" font-size="10" fill="#9ca3af">最低价 →</text>
+      <line x1="95" y1="32" x2="108" y2="32" stroke="#9ca3af" stroke-width="0.5" stroke-dasharray="3,2"/>
+      <line x1="95" y1="110" x2="108" y2="110" stroke="#dc2626" stroke-width="0.5" stroke-dasharray="3,2"/>
+      <line x1="95" y1="160" x2="108" y2="160" stroke="#dc2626" stroke-width="0.5" stroke-dasharray="3,2"/>
+      <line x1="95" y1="208" x2="108" y2="208" stroke="#9ca3af" stroke-width="0.5" stroke-dasharray="3,2"/>
+    </g>
 
-想象一只股票在某个交易日的故事：
+    <g transform="translate(340,40)">
+      <text x="65" y="15" text-anchor="middle" font-size="13" fill="#10b981" font-weight="bold">阴线（下跌）🟢</text>
+      <line x1="65" y1="30" x2="65" y2="60" stroke="#10b981" stroke-width="2"/>
+      <rect x="40" y="60" width="50" height="100" rx="3" fill="#10b981" opacity="0.85"/>
+      <line x1="65" y1="160" x2="65" y2="210" stroke="#10b981" stroke-width="2"/>
+      <text x="110" y="35" font-size="10" fill="#9ca3af">最高价 →</text>
+      <text x="110" y="115" font-size="10" fill="#10b981" font-weight="bold">开盘价 →</text>
+      <text x="110" y="165" font-size="10" fill="#10b981" font-weight="bold">收盘价 →</text>
+      <text x="110" y="215" font-size="10" fill="#9ca3af">最低价 →</text>
+      <line x1="95" y1="32" x2="108" y2="32" stroke="#9ca3af" stroke-width="0.5" stroke-dasharray="3,2"/>
+      <line x1="95" y1="110" x2="108" y2="110" stroke="#10b981" stroke-width="0.5" stroke-dasharray="3,2"/>
+      <line x1="95" y1="160" x2="108" y2="160" stroke="#10b981" stroke-width="0.5" stroke-dasharray="3,2"/>
+      <line x1="95" y1="208" x2="108" y2="208" stroke="#9ca3af" stroke-width="0.5" stroke-dasharray="3,2"/>
+    </g>
 
-> 🌅 早上9:30开盘，股价 **98元**（开盘价）
-> 📈 盘中最高冲到 **105元**（最高价）
-> 📉 盘中最低跌到 **96元**（最低价）
-> 🌆 下午3:00收盘，股价 **103元**（收盘价）
+    <rect x="30" y="270" width="540" height="25" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+    <text x="300" y="287" text-anchor="middle" font-size="11" fill="#92400e">💡 中国A股：红色=上涨(阳线)，绿色=下跌(阴线) — 与美股相反！</text>
+  </svg>
+  <div class="illustration-caption">K线的结构：实体表示开盘价到收盘价，影线表示最高价和最低价</div>
+</div>
 
-这四个数字就构成了一根K线：
+### K线的四个价格
 
-- **收盘价(103) > 开盘价(98)** → 这是**阳线**（红色）→ 今天涨了
-- 实体部分从98到103（开盘到收盘的范围）
-- 上影线到105（冲高回落的部分）
-- 下影线到96（探底回升的部分）
+一根K线记录了4个价格：
 
-:::tip[一句话记忆]
-**红涨绿跌**（中国A股）— 红色K线=上涨，绿色K线=下跌。
-注意：美股正好相反，绿涨红跌！
-:::
+<div class="stat-grid">
+  <div class="stat-card" style="border-top:3px solid #dc2626">
+    <div class="stat-value" style="color:#dc2626">开盘价</div>
+    <div class="stat-label">Opening Price</div>
+  </div>
+  <div class="stat-card" style="border-top:3px solid #dc2626">
+    <div class="stat-value" style="color:#dc2626">收盘价</div>
+    <div class="stat-label">Closing Price</div>
+  </div>
+  <div class="stat-card" style="border-top:3px solid #10b981">
+    <div class="stat-value" style="color:#10b981">最高价</div>
+    <div class="stat-label">High Price</div>
+  </div>
+  <div class="stat-card" style="border-top:3px solid #10b981">
+    <div class="stat-value" style="color:#10b981">最低价</div>
+    <div class="stat-label">Low Price</div>
+  </div>
+</div>
 
-### K线的三个组成部分
+## 10种经典K线形态
 
-**1. 实体（Body）**
-开盘价和收盘价之间的矩形部分。实体越大，说明多空某一方的力量越强。
+### 看涨形态
 
-**2. 上影线（Upper Shadow）**
-从实体上端到最高价的细线。上影线长 = 冲高被打回来 = 上方压力大。
+<div class="visual-card-grid">
+  <div class="visual-card" style="border-left:4px solid #10b981">
+    <strong style="color:#065f46">🔨 锤子线</strong>
+    <svg viewBox="0 0 100 120" style="height:80px;margin:8px auto;display:block">
+      <line x1="50" y1="15" x2="50" y2="25" stroke="#dc2626" stroke-width="2"/>
+      <rect x="35" y="25" width="30" height="15" rx="2" fill="#dc2626"/>
+      <line x1="50" y1="40" x2="50" y2="100" stroke="#dc2626" stroke-width="2"/>
+    </svg>
+    <p style="font-size:0.85rem;color:#6b7280;margin:0">出现在下跌末端，长下影线=买方强力反击</p>
+    <span style="font-size:0.75rem;color:#10b981">⭐ 可靠性：高</span>
+  </div>
+  <div class="visual-card" style="border-left:4px solid #10b981">
+    <strong style="color:#065f46">🌅 早晨之星</strong>
+    <svg viewBox="0 0 150 120" style="height:80px;margin:8px auto;display:block">
+      <rect x="15" y="15" width="25" height="65" rx="2" fill="#10b981"/>
+      <line x1="27" y1="10" x2="27" y2="15" stroke="#10b981" stroke-width="1.5"/>
+      <line x1="27" y1="80" x2="27" y2="100" stroke="#10b981" stroke-width="1.5"/>
+      <rect x="58" y="70" width="20" height="12" rx="2" fill="#dc2626"/>
+      <line x1="68" y1="65" x2="68" y2="90" stroke="#dc2626" stroke-width="1.5"/>
+      <rect x="100" y="25" width="25" height="55" rx="2" fill="#dc2626"/>
+      <line x1="112" y1="15" x2="112" y2="25" stroke="#dc2626" stroke-width="1.5"/>
+      <line x1="112" y1="80" x2="112" y2="100" stroke="#dc2626" stroke-width="1.5"/>
+    </svg>
+    <p style="font-size:0.85rem;color:#6b7280;margin:0">三根K线组合，底部反转信号</p>
+    <span style="font-size:0.75rem;color:#10b981">⭐ 可靠性：很高</span>
+  </div>
+  <div class="visual-card" style="border-left:4px solid #10b981">
+    <strong style="color:#065f46">🚀 大阳线</strong>
+    <svg viewBox="0 0 80 120" style="height:80px;margin:8px auto;display:block">
+      <line x1="40" y1="10" x2="40" y2="20" stroke="#dc2626" stroke-width="2"/>
+      <rect x="20" y="20" width="40" height="75" rx="3" fill="#dc2626" opacity="0.85"/>
+      <line x1="40" y1="95" x2="40" y2="105" stroke="#dc2626" stroke-width="2"/>
+    </svg>
+    <p style="font-size:0.85rem;color:#6b7280;margin:0">实体很大，几乎没有影线=强力上涨</p>
+    <span style="font-size:0.75rem;color:#10b981">⭐ 可靠性：中</span>
+  </div>
+</div>
 
-**3. 下影线（Lower Shadow）**
-从实体下端到最低价的细线。下影线长 = 探底被拉回来 = 下方支撑强。
+### 看跌形态
 
-## 📊 交互式K线图演示
+<div class="visual-card-grid">
+  <div class="visual-card" style="border-left:4px solid #ef4444">
+    <strong style="color:#991b1b">⬇️ 射击之星</strong>
+    <svg viewBox="0 0 100 120" style="height:80px;margin:8px auto;display:block">
+      <line x1="50" y1="15" x2="50" y2="80" stroke="#10b981" stroke-width="2"/>
+      <rect x="35" y="80" width="30" height="12" rx="2" fill="#10b981"/>
+      <line x1="50" y1="92" x2="50" y2="100" stroke="#10b981" stroke-width="2"/>
+    </svg>
+    <p style="font-size:0.85rem;color:#6b7280;margin:0">出现在上涨末端，长上影线=卖方强力反击</p>
+    <span style="font-size:0.75rem;color:#ef4444">⭐ 可靠性：高</span>
+  </div>
+  <div class="visual-card" style="border-left:4px solid #ef4444">
+    <strong style="color:#991b1b">🌆 黄昏之星</strong>
+    <svg viewBox="0 0 150 120" style="height:80px;margin:8px auto;display:block">
+      <rect x="15" y="20" width="25" height="55" rx="2" fill="#dc2626"/>
+      <line x1="27" y1="12" x2="27" y2="20" stroke="#dc2626" stroke-width="1.5"/>
+      <line x1="27" y1="75" x2="27" y2="100" stroke="#dc2626" stroke-width="1.5"/>
+      <rect x="58" y="25" width="20" height="12" rx="2" fill="#10b981"/>
+      <line x1="68" y1="18" x2="68" y2="45" stroke="#10b981" stroke-width="1.5"/>
+      <rect x="100" y="30" width="25" height="55" rx="2" fill="#10b981"/>
+      <line x1="112" y1="20" x2="112" y2="30" stroke="#10b981" stroke-width="1.5"/>
+      <line x1="112" y1="85" x2="112" y2="100" stroke="#10b981" stroke-width="1.5"/>
+    </svg>
+    <p style="font-size:0.85rem;color:#6b7280;margin:0">早晨之星的反转版，顶部反转信号</p>
+    <span style="font-size:0.75rem;color:#ef4444">⭐ 可靠性：很高</span>
+  </div>
+  <div class="visual-card" style="border-left:4px solid #ef4444">
+    <strong style="color:#991b1b">💀 大阴线</strong>
+    <svg viewBox="0 0 80 120" style="height:80px;margin:8px auto;display:block">
+      <line x1="40" y1="10" x2="40" y2="20" stroke="#10b981" stroke-width="2"/>
+      <rect x="20" y="20" width="40" height="75" rx="3" fill="#10b981" opacity="0.85"/>
+      <line x1="40" y1="95" x2="40" y2="105" stroke="#10b981" stroke-width="2"/>
+    </svg>
+    <p style="font-size:0.85rem;color:#6b7280;margin:0">实体很大，几乎没有影线=强力下跌</p>
+    <span style="font-size:0.75rem;color:#ef4444">⭐ 可靠性：中</span>
+  </div>
+</div>
 
-下面是一个真实的K线图，你可以观察阳线和阴线的区别：
+## 📊 交互式K线图表
 
-<InteractiveChart title="K线基础演示" showVolume={true} showMA={true} height={350} />
+下面的图表展示了真实的K线走势，你可以用鼠标拖拽和缩放来观察：
+
+<InteractiveChart showMA={true} showVolume={true} height={350} />
 
 :::note[操作提示]
-- 红色蜡烛 = 阳线（收盘价高于开盘价，上涨）
-- 绿色蜡烛 = 阴线（收盘价低于开盘价，下跌）
-- 蜡烛的上下细线就是影线，代表盘中的极端价格
-- 点击工具栏的 **MA均线** 按钮，观察均线和K线的关系
+- **拖拽** 图表可以查看历史数据
+- **缩放** 可以切换日线/周线视角
+- **MA5/MA20** 均线已叠加显示
 :::
 
-## K线形态详解
+## K线形态可靠性提升技巧
 
-### 阳线（看涨信号）
+单个K线形态的准确率其实并不高（大约50-60%），但通过以下方法可以显著提升：
 
-**大阳线** — 实体很长，几乎没有影线
-- 含义：买方完全主导，强势上涨
-- 就像一场足球赛，主队从开场就压着对手打
-- 实战意义：**如果出现在底部区域，可能是反转信号**
+<div class="step-flow">
+  <div class="step-item">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>结合位置判断</h4>
+      <p>同样的锤子线，出现在下跌末期才有效；出现在上涨中途则无意义</p>
+    </div>
+  </div>
+  <div class="step-item">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>等确认K线</h4>
+      <p>看到反转形态不要急着买入，等第二天出现确认阳线再行动</p>
+    </div>
+  </div>
+  <div class="step-item">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>看成交量配合</h4>
+      <p>反转形态配合放量更可靠；缩量反转可能是假信号</p>
+    </div>
+  </div>
+  <div class="step-item">
+    <div class="step-number">4</div>
+    <div class="step-content">
+      <h4>多周期共振</h4>
+      <p>日线和周线同时出现反转信号，准确率大增</p>
+    </div>
+  </div>
+</div>
 
-**下影阳线** — 长下影线 + 短上影线
-- 含义：盘中曾大幅下跌，但最终被买方拉回
-- 就像拳手被打倒后又站起来反击
-- 实战意义：**下影线越长，支撑力量越强**
+## 5层K线阅读法
 
-**上影阳线** — 长上影线 + 短实体
-- 含义：冲高后回落，买方力量开始衰竭
-- ⚠️ 可能是见顶信号
-- 实战意义：**在高位出现时要警惕**
-
-**小阳线** — 实体很短
-- 含义：小幅上涨，多空差距不大
-- 实战意义：**需要结合前后K线判断方向**
-
-### 阴线（看跌信号）
-
-**大阴线** — 实体很长，几乎没有影线
-- 含义：卖方完全主导，强势下跌
-- 就像泄洪一样，势不可挡
-- 实战意义：**如果出现在高位，可能是趋势反转**
-
-**上影阴线** — 长上影线 + 阴线实体
-- 含义：冲高后大幅回落，卖方非常强势
-- ⚠️ 强烈的看空信号
-
-**下影阴线** — 长下影线 + 阴线实体
-- 含义：虽然下跌，但低位有支撑
-- 可能是止跌企稳的信号
-
-### 特殊K线
-
-**十字星** — 开盘价 ≈ 收盘价，有上下影线
-- 含义：多空双方势均力敌，市场犹豫不决
-- 在上涨末端出现 → ⚠️ 可能要反转下跌
-- 在下跌末端出现 → ⚠️ 可能要反转上涨
-- 实战意义：**十字星本身不决定方向，但预示方向即将选择**
-
-**一字板** — 开盘=收盘=最高=最低
-- 含义：涨停或跌停，全天没有任何波动
-- 涨停一字板 = 极度看好
-- 跌停一字板 = 极度看空
-
-:::tip[形象理解]
-十字星就像两个人掰手腕，势均力敌，谁也压不倒谁。接下来谁先发力，方向就往哪走。
-:::
-
-## 经典K线组合形态
-
-### 🔥 看涨形态（5种）
-
-**1. 锤子线（Hammer）⭐**
-- 出现在下跌趋势中
-- 特征：小实体 + 很长的下影线（至少是实体的2倍）
-- 含义：多方在低位强力反击
-- 可靠性：⭐⭐⭐⭐
-
-**2. 早晨之星（Morning Star）⭐⭐**
-- 三根K线组合：大阴线 + 十字星/小实体 + 大阳线
-- 中间的十字星最好跳空低开
-- 含义：黑暗过去，黎明到来，趋势反转向上
-- 可靠性：⭐⭐⭐⭐⭐（最强的反转形态之一）
-
-**3. 红三兵**
-- 连续三根阳线，每根收盘价逐步升高
-- 实体适中，没有过长的影线
-- 含义：多方持续进攻，趋势明朗
-- 可靠性：⭐⭐⭐⭐
-
-**4. 看涨吞没（刺透形态）⭐**
-- 前一根阴线被后一根大阳线完全"吞没"
-- 阳线的收盘价要超过阴线实体的一半以上
-- 含义：多方突然发力，扭转局面
-- 可靠性：⭐⭐⭐⭐
-
-**5. 多方炮**
-- 两根阳线中间夹一根阴线
-- 阴线不跌破第一根阳线的开盘价
-- 含义：多方暂歇后继续进攻
-- 可靠性：⭐⭐⭐
-
-### 💀 看跌形态（5种）
-
-**1. 射击之星（Shooting Star）⭐**
-- 出现在上涨趋势中
-- 特征：小实体 + 很长的上影线（至少是实体的2倍）
-- 含义：冲高失败，空方反击
-- 可靠性：⭐⭐⭐⭐
-
-**2. 黄昏之星（Evening Star）⭐⭐**
-- 三根K线组合：大阳线 + 十字星/小实体 + 大阴线
-- 和早晨之星正好相反
-- 含义：黄昏降临，趋势反转向下
-- 可靠性：⭐⭐⭐⭐⭐
-
-**3. 三只乌鸦**
-- 连续三根阴线，每根收盘价逐步降低
-- 含义：空方持续打压，趋势向下
-- 可靠性：⭐⭐⭐⭐
-
-**4. 看跌吞没（乌云盖顶）⭐**
-- 前一根阳线被后一根大阴线完全"吞没"
-- 阴线的收盘价要跌破阳线实体的一半以下
-- 含义：空方突然发力，趋势逆转
-- 可靠性：⭐⭐⭐⭐
-
-**5. 空方炮**
-- 两根阴线中间夹一根阳线
-- 阳线不突破第一根阴线的开盘价
-- 含义：空方暂歇后继续打压
-- 可靠性：⭐⭐⭐
-
-## K线形态的可靠性提升技巧
-
-单看K线形态不够可靠，需要配合以下条件：
-
-### 技巧一：看位置
-
-| 同样的形态 | 在底部出现 | 在腰部出现 | 在顶部出现 |
-|---|---|---|---|
-| 锤子线 | ⭐⭐⭐⭐⭐ | ⭐⭐ | 没意义 |
-| 射击之星 | 没意义 | ⭐⭐ | ⭐⭐⭐⭐⭐ |
-| 十字星 | 可能见底 | 犹豫 | 可能见顶 |
-| 大阳线 | 反转信号 | 继续看涨 | 追高风险 |
-
-**核心：位置比形态更重要。**
-
-### 技巧二：看成交量
-
-- 看涨形态 + 放量 → 信号更可靠
-- 看涨形态 + 缩量 → 信号存疑
-- 大阳线 + 天量 → 强烈信号
-- 大阳线 + 地量 → 可能是假突破
-
-### 技巧三：等确认
-
-看到K线形态不要急着入场，**等下一根K线确认**：
-- 看到锤子线 → 等第二天收阳线确认后再买入
-- 看到射击之星 → 等第二天收阴线确认后再卖出
-
-## 不同时间周期的K线
-
-K线可以用于任何时间周期，含义不同：
-
-| 周期 | 一根K线代表 | 适用场景 | 可靠性 |
-|---|---|---|---|
-| 1分钟 | 1分钟的交易数据 | 超短线、日内 | ⭐⭐ |
-| 5分钟 | 5分钟的交易数据 | 日内交易 | ⭐⭐ |
-| 15分钟 | 15分钟的交易数据 | 短线波段 | ⭐⭐⭐ |
-| 60分钟 | 1小时的交易数据 | 波段交易 | ⭐⭐⭐ |
-| **日线** | **一整天的交易数据** | **波段/中线** | **⭐⭐⭐⭐** |
-| **周线** | **一整周的交易数据** | **中线** | **⭐⭐⭐⭐⭐** |
-| 月线 | 一整月的交易数据 | 长线投资 | ⭐⭐⭐⭐⭐ |
-
-:::tip[核心原则]
-**周期越长，信号越可靠。** 日线形态比分钟线更有意义，周线形态比日线更有意义。
-
-**多周期共振：** 如果日线和周线同时出现看涨信号，可靠性大大提高。
-:::
-
-## 实战使用建议
-
-### 读懂K线的5个层次
-
-**第一层：看颜色** — 阳线还是阴线？涨还是跌？
-**第二层：看实体** — 实体大还是小？力量强还是弱？
-**第三层：看影线** — 上下影线长短？压力和支撑在哪里？
-**第四层：看组合** — 前后K线组合成什么形态？
-**第五层：看位置** — 形态出现在什么位置？底部还是顶部？
-
-### K线分析检查清单
-
-1. ✅ **不要只看一根K线** — 单根K线容易骗线，要看组合形态
-2. ✅ **结合成交量** — K线形态 + 成交量配合才能确认信号
-3. ✅ **先看大周期** — 先看周线/月线判断大趋势，再看日线找入场点
-4. ✅ **注意位置** — 同样的K线形态，在高位和低位的含义完全不同
-5. ✅ **等待确认** — 看到信号不要急着入场，等下一根K线确认
-6. ✅ **形态失败要止损** — 不是每个形态都会成功，失败时果断止损
+<div class="visual-card" style="background:linear-gradient(135deg,#eff6ff,#ede9fe);border-color:#818cf8">
+  <strong style="font-size:1.1rem;color:#4338ca">📖 从K线中读懂市场信息</strong>
+  <div style="margin-top:1rem">
+    <div style="display:flex;gap:0.75rem;align-items:flex-start;margin-bottom:0.75rem">
+      <span style="background:#4338ca;color:white;padding:2px 10px;border-radius:99px;font-size:0.75rem;font-weight:bold;white-space:nowrap">第1层</span>
+      <span style="color:#1f2937;font-size:0.9rem"><strong>阴阳</strong> — 收盘比开盘高还是低？（方向）</span>
+    </div>
+    <div style="display:flex;gap:0.75rem;align-items:flex-start;margin-bottom:0.75rem">
+      <span style="background:#4338ca;color:white;padding:2px 10px;border-radius:99px;font-size:0.75rem;font-weight:bold;white-space:nowrap">第2层</span>
+      <span style="color:#1f2937;font-size:0.9rem"><strong>实体大小</strong> — 实体越大，力量越强（力度）</span>
+    </div>
+    <div style="display:flex;gap:0.75rem;align-items:flex-start;margin-bottom:0.75rem">
+      <span style="background:#4338ca;color:white;padding:2px 10px;border-radius:99px;font-size:0.75rem;font-weight:bold;white-space:nowrap">第3层</span>
+      <span style="color:#1f2937;font-size:0.9rem"><strong>影线长短</strong> — 长上影=上方压力大，长下影=下方支撑强</span>
+    </div>
+    <div style="display:flex;gap:0.75rem;align-items:flex-start;margin-bottom:0.75rem">
+      <span style="background:#4338ca;color:white;padding:2px 10px;border-radius:99px;font-size:0.75rem;font-weight:bold;white-space:nowrap">第4层</span>
+      <span style="color:#1f2937;font-size:0.9rem"><strong>组合形态</strong> — 多根K线组合出锤子线、十字星、吞没等</span>
+    </div>
+    <div style="display:flex;gap:0.75rem;align-items:flex-start">
+      <span style="background:#4338ca;color:white;padding:2px 10px;border-radius:99px;font-size:0.75rem;font-weight:bold;white-space:nowrap">第5层</span>
+      <span style="color:#1f2937;font-size:0.9rem"><strong>位置+成交量</strong> — 同样的形态在不同位置含义完全不同</span>
+    </div>
+  </div>
+</div>
 
 ## 下一步学习
 
-- 📊 学完K线，继续学习均线 → 《均线系统：趋势的方向标》
-- 🔢 了解量价关系 → 《成交量：价格的真相指标》
-- 📈 学习MACD指标 → 《MACD指标：趋势与动量的完美结合》
+<div class="visual-card-grid">
+  <a href="/tutorials/03-moving-average/" style="text-decoration:none;color:inherit">
+    <div class="visual-card" style="border-left:4px solid #3b82f6">
+      <strong>📊 均线系统 →</strong>
+      <p style="color:#6b7280;font-size:0.85rem;margin-top:0.5rem">K线的好搭档，判断趋势方向</p>
+    </div>
+  </a>
+  <a href="/tutorials/04-volume-basics/" style="text-decoration:none;color:inherit">
+    <div class="visual-card" style="border-left:4px solid #8b5cf6">
+      <strong>📈 成交量分析 →</strong>
+      <p style="color:#6b7280;font-size:0.85rem;margin-top:0.5rem">验证K线信号的真假</p>
+    </div>
+  </a>
+</div>
