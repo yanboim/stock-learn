@@ -54,10 +54,27 @@ html {
   right: 2rem;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 5rem;
-  opacity: 0.3;
+  width: 5rem;
+  height: 5rem;
+  border: 3px solid rgba(255,255,255,0.42);
+  border-radius: 1rem;
+  font-size: 0;
+  opacity: 0.55;
   z-index: 0;
 }
+.tutorial-banner .banner-icon::before,
+.tutorial-banner .banner-icon::after {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  top: 50%;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.55);
+}
+.tutorial-banner .banner-icon::before { transform: rotate(48deg); }
+.tutorial-banner .banner-icon::after { transform: rotate(-48deg); }
 .tutorial-banner p {
   position: relative;
   z-index: 1;
