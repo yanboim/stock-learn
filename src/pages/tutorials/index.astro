@@ -8,95 +8,71 @@ const sortedTutorials = tutorials.sort(
   (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
 );
 
-const categoryIcons: Record<string, string> = {
-  '技术指标': '📊',
-  '基础入门': '🎓',
-  '行业研究': '🏭',
-  '交易系统': '📋',
-  '实战案例': '📈',
-  '风险控制': '⚠️',
+const categoryLabels: Record<string, string> = {
+  '技术指标': '指标',
+  '基础入门': '入门',
+  '行业研究': '研究',
+  '交易系统': '系统',
+  '实战案例': '案例',
+  '风险控制': '风控',
 };
 
 const difficultyColors: Record<string, string> = {
-  '入门': 'bg-green-100 text-green-700',
-  '进阶': 'bg-yellow-100 text-yellow-700',
-  '高级': 'bg-red-100 text-red-700',
+  '入门': 'difficulty-beginner',
+  '进阶': 'difficulty-advanced',
+  '高级': 'difficulty-hard',
 };
 ---
 
 <BaseLayout title="教程列表 - 股票学习站">
-  <h1 id="tutorial-list-title" class="text-3xl font-bold text-gray-900 mb-2">📚 教程列表</h1>
-  <p id="tutorial-list-desc" class="text-gray-500 mb-6">系统化学习股票投资知识，从入门到进阶</p>
+  <section class="list-hero">
+    <p class="section-kicker">Lessons</p>
+    <h1 id="tutorial-list-title">教程列表</h1>
+    <p id="tutorial-list-desc">系统化学习股票投资知识，从入门到进阶。</p>
+  </section>
 
-  <div class="flex flex-wrap gap-2 mb-8">
-    <a
-      href="/tutorials"
-      data-category-filter=""
-      class="category-filter px-3 py-1.5 rounded-full text-sm font-medium transition bg-blue-600 text-white"
-    >
-      全部
-    </a>
+  <div class="filter-bar" aria-label="教程分类筛选">
+    <a href="/tutorials" data-category-filter="" class="category-filter is-active">全部</a>
     {allCategories.map((category) => (
-      <a
-        href={`/tutorials?cat=${encodeURIComponent(category)}`}
-        data-category-filter={category}
-        class="category-filter px-3 py-1.5 rounded-full text-sm font-medium transition bg-white text-gray-600 border border-gray-200 hover:border-blue-300 hover:text-blue-600"
-      >
-        {categoryIcons[category] || '📚'} {category}
+      <a href={`/tutorials?cat=${encodeURIComponent(category)}`} data-category-filter={category} class="category-filter">
+        {category}
       </a>
     ))}
   </div>
 
-  <div class="space-y-4">
+  <div class="tutorial-list-grid">
     {sortedTutorials.map((tutorial) => (
-      <a
-        href={`/tutorials/${tutorial.id}`}
-        data-tutorial-card
-        data-category={tutorial.data.category}
-        class="group block p-5 bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all"
-      >
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <div class="flex-1">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="text-lg">{categoryIcons[tutorial.data.category] || '📚'}</span>
-              <span class="text-sm text-gray-500">{tutorial.data.category}</span>
-              <span class={`text-xs px-2 py-0.5 rounded-full font-medium ${difficultyColors[tutorial.data.difficulty] || 'bg-gray-100 text-gray-600'}`}>
-                {tutorial.data.difficulty}
-              </span>
-            </div>
-            <h2 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition">
-              {tutorial.data.title}
-            </h2>
-            <p class="text-sm text-gray-500 mt-1">{tutorial.data.description}</p>
-            <div class="flex gap-2 mt-2">
-              {tutorial.data.tags.map((tag) => (
-                <span class="text-xs text-gray-400">#{tag}</span>
-              ))}
-            </div>
-          </div>
-          <div class="text-sm text-gray-400 flex-shrink-0">
-            {tutorial.data.publishDate.toLocaleDateString('zh-CN')}
-          </div>
+      <a href={`/tutorials/${tutorial.id}`} data-tutorial-card data-category={tutorial.data.category} class="tutorial-list-card">
+        <div class="tutorial-card-topline">
+          <span class="category-chip">{categoryLabels[tutorial.data.category] || tutorial.data.category}</span>
+          <span class={`difficulty-chip ${difficultyColors[tutorial.data.difficulty] || 'difficulty-default'}`}>
+            {tutorial.data.difficulty}
+          </span>
+        </div>
+        <h2>{tutorial.data.title}</h2>
+        <p>{tutorial.data.description}</p>
+        <div class="tag-row">
+          {tutorial.data.tags.slice(0, 4).map((tag) => (
+            <span>#{tag}</span>
+          ))}
+        </div>
+        <div class="card-footer-line">
+          <span>{tutorial.data.publishDate.toLocaleDateString('zh-CN')}</span>
+          <strong>阅读</strong>
         </div>
       </a>
     ))}
   </div>
 
-  <div id="empty-category-state" class="hidden text-center py-16 text-gray-400">
-    <div class="text-6xl mb-4">📝</div>
+  <div id="empty-category-state" class="hidden empty-state">
+    <div class="empty-state-mark">0</div>
     <p id="empty-category-text">该分类下暂无教程</p>
-    <a href="/tutorials" class="inline-block mt-4 text-blue-600 hover:text-blue-700 font-medium">
-      查看全部教程 →
-    </a>
+    <a href="/tutorials">查看全部教程</a>
   </div>
 
-  <script define:vars={{ categoryIcons }}>
-    const activeClasses = ['bg-blue-600', 'text-white'];
-    const inactiveClasses = ['bg-white', 'text-gray-600', 'border', 'border-gray-200', 'hover:border-blue-300', 'hover:text-blue-600'];
-
+  <script define:vars={{ categoryLabels }}>
     function setButtonState(button, active) {
-      button.classList.remove(...activeClasses, ...inactiveClasses);
-      button.classList.add(...(active ? activeClasses : inactiveClasses));
+      button.classList.toggle('is-active', active);
     }
 
     function applyCategoryFilter(category, updateUrl = false) {
@@ -118,14 +94,14 @@ const difficultyColors: Record<string, string> = {
         setButtonState(button, (button.dataset.categoryFilter || '') === category);
       });
 
-      if (title) title.textContent = category ? `${categoryIcons[category] || '📚'} ${category}` : '📚 教程列表';
+      if (title) title.textContent = category || '教程列表';
       if (desc) {
         desc.textContent = category
-          ? `当前显示「${category}」分类，共 ${visibleCount} 篇教程`
-          : '系统化学习股票投资知识，从入门到进阶';
+          ? `当前显示「${category}」分类，共 ${visibleCount} 篇教程。`
+          : '系统化学习股票投资知识，从入门到进阶。';
       }
       if (emptyState) emptyState.classList.toggle('hidden', visibleCount !== 0);
-      if (emptyText) emptyText.textContent = category ? `「${category}」分类下暂无教程` : '教程正在编写中，敬请期待...';
+      if (emptyText) emptyText.textContent = category ? `「${category}」分类下暂无教程` : '教程正在编写中';
 
       if (updateUrl) {
         const url = category ? `/tutorials?cat=${encodeURIComponent(category)}` : '/tutorials';

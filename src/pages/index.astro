@@ -4,111 +4,148 @@ import { getCollection } from 'astro:content';
 
 const tutorials = await getCollection('tutorials');
 const sortedTutorials = tutorials.sort((a, b) => {
-  if (a.data.category !== b.data.category) return a.data.category.localeCompare(b.data.category);
+  if (a.data.category !== b.data.category) return a.data.category.localeCompare(b.data.category, 'zh-CN');
   return a.data.order - b.data.order;
 });
 
-// Group by category
 const categories = [...new Set(tutorials.map((t) => t.data.category))];
-const categoryIcons: Record<string, string> = {
-  '技术指标': '📊',
-  '基础入门': '🎓',
-  '行业研究': '🏭',
-  '交易系统': '📋',
-  '实战案例': '📈',
-  '风险控制': '⚠️',
+const categoryMeta: Record<string, { label: string; tone: string; blurb: string }> = {
+  '技术指标': { label: '指标', tone: 'blue', blurb: 'K线、均线、成交量、MACD、RSI、TD序列' },
+  '基础入门': { label: '入门', tone: 'emerald', blurb: '股票基础、交易规则、估值三把尺子' },
+  '行业研究': { label: '研究', tone: 'amber', blurb: '产业链、财报、价值投资与公司质量' },
+  '交易系统': { label: '系统', tone: 'cyan', blurb: '选股、计划、执行、复盘闭环' },
+  '实战案例': { label: '案例', tone: 'violet', blurb: '波段交易和价值投资完整流程' },
+  '风险控制': { label: '风控', tone: 'rose', blurb: '止损、仓位、心理纪律和回撤控制' },
 };
+
+const featured = sortedTutorials.slice(0, 4);
 ---
 
 <BaseLayout>
-  <!-- Hero Section -->
-  <section class="text-center py-16">
-    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-      📈 股票学习站
-    </h1>
-    <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
-      系统化学习股票投资：技术分析、行业研究、交易系统
-    </p>
-    <p class="text-sm text-gray-400 mb-8">
-      每篇教程配有交互式图表和可视化信息图，让知识更直观
-    </p>
-    <div class="flex justify-center gap-4">
-      <a href="/tutorials" class="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition">
-        开始学习 →
-      </a>
+  <section class="home-hero">
+    <div class="home-hero-copy">
+      <p class="section-kicker">股票学习路线</p>
+      <h1>把零散知识，整理成可执行的投资框架</h1>
+      <p class="home-hero-lead">
+        从K线、指标、产业链到交易系统，用图表和案例建立自己的分析方法。
+      </p>
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <a href="/tutorials" class="primary-button">开始学习</a>
+        <a href="/tutorials?cat=行业研究" class="secondary-button">看行业研究</a>
+      </div>
+    </div>
+
+    <aside class="home-hero-panel" aria-label="学习框架概览">
+      <div class="panel-header">
+        <span>Research map</span>
+        <strong>{tutorials.length} lessons</strong>
+      </div>
+      <div class="framework-track">
+        <div>
+          <span class="track-index">01</span>
+          <strong>读懂图表</strong>
+          <p>K线、均线、成交量验证趋势</p>
+        </div>
+        <div>
+          <span class="track-index">02</span>
+          <strong>判断价值</strong>
+          <p>估值、财报、产业链确认质量</p>
+        </div>
+        <div>
+          <span class="track-index">03</span>
+          <strong>执行计划</strong>
+          <p>仓位、止损、复盘控制回撤</p>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="metric-grid" aria-label="站点数据">
+    <div class="metric-card">
+      <strong>{tutorials.length}</strong>
+      <span>篇系统教程</span>
+    </div>
+    <div class="metric-card">
+      <strong>{categories.length}</strong>
+      <span>个学习模块</span>
+    </div>
+    <div class="metric-card">
+      <strong>图表</strong>
+      <span>交互式演示</span>
+    </div>
+    <div class="metric-card">
+      <strong>风控</strong>
+      <span>每篇强调失效条件</span>
     </div>
   </section>
 
-  <!-- Stats -->
-  <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-    <div class="text-center p-4 bg-white rounded-xl border border-gray-200">
-      <div class="text-2xl font-bold text-blue-600">{tutorials.length}</div>
-      <div class="text-sm text-gray-500">篇教程</div>
+  <section class="section-block">
+    <div class="section-heading">
+      <p class="section-kicker">先从这里开始</p>
+      <h2>推荐路径</h2>
     </div>
-    <div class="text-center p-4 bg-white rounded-xl border border-gray-200">
-      <div class="text-2xl font-bold text-green-600">{categories.length}</div>
-      <div class="text-sm text-gray-500">个分类</div>
-    </div>
-    <div class="text-center p-4 bg-white rounded-xl border border-gray-200">
-      <div class="text-2xl font-bold text-purple-600">交互式</div>
-      <div class="text-sm text-gray-500">学习体验</div>
-    </div>
-    <div class="text-center p-4 bg-white rounded-xl border border-gray-200">
-      <div class="text-2xl font-bold text-orange-600">免费</div>
-      <div class="text-sm text-gray-500">永久开放</div>
+    <div class="featured-grid">
+      {featured.map((tutorial, index) => (
+        <a href={`/tutorials/${tutorial.id}`} class={`featured-card featured-card-${index + 1}`}>
+          <span class="card-meta">{categoryMeta[tutorial.data.category]?.label || tutorial.data.category} · {tutorial.data.difficulty}</span>
+          <h3>{tutorial.data.title}</h3>
+          <p>{tutorial.data.description}</p>
+        </a>
+      ))}
     </div>
   </section>
 
-  <!-- Categories & Tutorials -->
-  {categories.map((cat) => (
-    <section class="mb-10">
-      <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-        <span>{categoryIcons[cat] || '📚'}</span>
-        <span>{cat}</span>
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {sortedTutorials
-          .filter((t) => t.data.category === cat)
-          .map((tutorial) => (
-            <a
-              href={`/tutorials/${tutorial.id}`}
-              class="group block p-5 bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all"
-            >
-              <div class="flex items-center gap-2 mb-2">
-                <span class="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium">
-                  {tutorial.data.difficulty}
-                </span>
+  <section class="section-block">
+    <div class="section-heading">
+      <p class="section-kicker">完整课程库</p>
+      <h2>按模块学习</h2>
+    </div>
+    <div class="category-stack">
+      {categories.map((cat) => {
+        const lessons = sortedTutorials.filter((t) => t.data.category === cat);
+        const meta = categoryMeta[cat] || { label: cat.slice(0, 2), tone: 'slate', blurb: '系统化教程' };
+        return (
+          <section class={`category-band category-${meta.tone}`}>
+            <div class="category-band-head">
+              <div class="category-badge">{meta.label}</div>
+              <div>
+                <h3>{cat}</h3>
+                <p>{meta.blurb}</p>
               </div>
-              <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition mb-2">
-                {tutorial.data.title}
-              </h3>
-              <p class="text-sm text-gray-500 line-clamp-2">
-                {tutorial.data.description}
-              </p>
-            </a>
-          ))}
-      </div>
-    </section>
-  ))}
+              <a href={`/tutorials?cat=${encodeURIComponent(cat)}`} class="category-link">查看全部</a>
+            </div>
+            <div class="lesson-grid">
+              {lessons.map((tutorial) => (
+                <a href={`/tutorials/${tutorial.id}`} class="lesson-card">
+                  <span>{tutorial.data.difficulty}</span>
+                  <h4>{tutorial.data.title}</h4>
+                  <p>{tutorial.data.description}</p>
+                </a>
+              ))}
+            </div>
+          </section>
+        );
+      })}
+    </div>
+  </section>
 
-  <!-- Feature highlight -->
-  <section class="mt-16 p-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl border border-blue-100">
-    <h2 class="text-2xl font-bold text-gray-800 mb-4">✨ 本站特色</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="text-center">
-        <div class="text-4xl mb-2">📊</div>
-        <h3 class="font-semibold text-gray-800 mb-1">交互式K线图</h3>
-        <p class="text-sm text-gray-500">每篇指标教程配真实K线演示，可以切换参数实时查看效果</p>
+  <section class="feature-strip">
+    <div>
+      <p class="section-kicker">设计目标</p>
+      <h2>不是概念堆砌，而是把知识变成判断流程</h2>
+    </div>
+    <div class="feature-points">
+      <div>
+        <strong>图表验证</strong>
+        <span>指标教程配交互式K线和参数切换</span>
       </div>
-      <div class="text-center">
-        <div class="text-4xl mb-2">🖼️</div>
-        <h3 class="font-semibold text-gray-800 mb-1">可视化信息图</h3>
-        <p class="text-sm text-gray-500">复杂概念用精美长图呈现，一眼看懂核心逻辑</p>
+      <div>
+        <strong>产业链视角</strong>
+        <span>强调关键环节、替代难度和公司地位</span>
       </div>
-      <div class="text-center">
-        <div class="text-4xl mb-2">⚖️</div>
-        <h3 class="font-semibold text-gray-800 mb-1">对比分析表</h3>
-        <p class="text-sm text-gray-500">不同指标、不同策略的交互对比，帮助深入理解差异</p>
+      <div>
+        <strong>风险优先</strong>
+        <span>每个策略都回到仓位、止损和逻辑失效</span>
       </div>
     </div>
   </section>

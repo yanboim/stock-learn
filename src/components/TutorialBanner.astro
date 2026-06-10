@@ -9,19 +9,18 @@ export interface Props {
   icon?: string;
 }
 
-const { title, description, category, difficulty, publishDate, tags = [], icon = '📊' } = Astro.props;
+const { title, description, category, difficulty, publishDate, tags = [] } = Astro.props;
 
-const categoryConfig: Record<string, { color: string; defaultIcon: string }> = {
-  '基础入门': { color: 'banner-blue', defaultIcon: '📚' },
-  '技术指标': { color: 'banner-purple', defaultIcon: '📈' },
-  '行业研究': { color: 'banner-orange', defaultIcon: '🏭' },
-  '交易系统': { color: 'banner-teal', defaultIcon: '⚙️' },
-  '实战案例': { color: 'banner-pink', defaultIcon: '🎯' },
-  '风险控制': { color: 'banner-red', defaultIcon: '🛡️' },
+const categoryConfig: Record<string, { color: string; label: string }> = {
+  '基础入门': { color: 'banner-blue', label: '入门' },
+  '技术指标': { color: 'banner-purple', label: '指标' },
+  '行业研究': { color: 'banner-orange', label: '研究' },
+  '交易系统': { color: 'banner-teal', label: '系统' },
+  '实战案例': { color: 'banner-pink', label: '案例' },
+  '风险控制': { color: 'banner-red', label: '风控' },
 };
 
-const config = categoryConfig[category] || { color: 'banner-blue', defaultIcon: '📊' };
-const displayIcon = icon !== '📊' ? icon : config.defaultIcon;
+const config = categoryConfig[category] || { color: 'banner-blue', label: '学习' };
 
 const difficultyColors: Record<string, string> = {
   '入门': 'bg-white/20 text-white',
@@ -31,7 +30,7 @@ const difficultyColors: Record<string, string> = {
 ---
 
 <div class={`tutorial-banner ${config.color}`}>
-  <span class="banner-icon">{displayIcon}</span>
+  <span class="banner-icon" aria-hidden="true">{config.label}</span>
   <div class="flex flex-wrap gap-2 mb-3" style="position:relative;z-index:1">
     <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm">
       {category}

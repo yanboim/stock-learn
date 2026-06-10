@@ -7,6 +7,15 @@ export interface Props {
 }
 
 const { title = '股票学习站', description = '系统化学习股票投资：技术分析、行业研究、交易系统' } = Astro.props;
+const pathname = Astro.url.pathname;
+
+const navItems = [
+  { label: '首页', href: '/' },
+  { label: '教程', href: '/tutorials' },
+  { label: '技术指标', href: '/tutorials?cat=技术指标' },
+  { label: '行业研究', href: '/tutorials?cat=行业研究' },
+  { label: '交易系统', href: '/tutorials?cat=交易系统' },
+];
 ---
 
 <!doctype html>
@@ -18,65 +27,71 @@ const { title = '股票学习站', description = '系统化学习股票投资：
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
   </head>
-  <body class="min-h-screen bg-gray-50 text-gray-900">
-    <!-- Navigation -->
-    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
-      <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-        <a href="/" class="flex items-center gap-2 text-xl font-bold text-gray-900">
-          <span class="text-2xl">📈</span>
-          <span>股票学习站</span>
+  <body class="min-h-screen text-slate-950 antialiased">
+    <a href="#main-content" class="skip-link">跳到正文</a>
+    <nav class="site-nav">
+      <div class="site-shell h-[68px] flex items-center justify-between gap-6">
+        <a href="/" class="brand-link" aria-label="股票学习站首页">
+          <span class="brand-mark" aria-hidden="true">SL</span>
+          <span class="brand-text">股票学习站</span>
         </a>
-        <div class="hidden md:flex items-center gap-6 text-sm font-medium">
-          <a href="/" class="text-gray-600 hover:text-gray-900 transition">首页</a>
-          <a href="/tutorials" class="text-gray-600 hover:text-gray-900 transition">教程</a>
-          <a href="/tutorials?cat=技术指标" class="text-gray-600 hover:text-gray-900 transition">技术指标</a>
-          <a href="/tutorials?cat=行业研究" class="text-gray-600 hover:text-gray-900 transition">行业研究</a>
-          <a href="/tutorials?cat=交易系统" class="text-gray-600 hover:text-gray-900 transition">交易系统</a>
+        <div class="hidden md:flex items-center gap-1 rounded-full border border-slate-200/70 bg-white/70 p-1 shadow-sm shadow-slate-900/5">
+          {navItems.map((item) => {
+            const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith('/tutorials') && item.label === '教程';
+            return (
+              <a
+                href={item.href}
+                class={`nav-pill ${isActive ? 'nav-pill-active' : ''}`}
+              >
+                {item.label}
+              </a>
+            );
+          })}
         </div>
-        <!-- Mobile menu button -->
-        <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-600">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+        <button id="mobile-menu-btn" class="md:hidden nav-menu-button" aria-label="打开菜单" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
       </div>
-      <!-- Mobile menu -->
-      <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 bg-white">
-        <div class="px-4 py-3 space-y-2">
-          <a href="/" class="block py-2 text-gray-600">首页</a>
-          <a href="/tutorials" class="block py-2 text-gray-600">教程</a>
-          <a href="/tutorials?cat=技术指标" class="block py-2 text-gray-600">技术指标</a>
-          <a href="/tutorials?cat=行业研究" class="block py-2 text-gray-600">行业研究</a>
-          <a href="/tutorials?cat=交易系统" class="block py-2 text-gray-600">交易系统</a>
+      <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 bg-white/95 backdrop-blur-xl">
+        <div class="site-shell py-3 grid gap-1">
+          {navItems.map((item) => (
+            <a href={item.href} class="rounded-xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">
+              {item.label}
+            </a>
+          ))}
         </div>
       </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="max-w-5xl mx-auto px-4 py-8">
+    <main id="main-content" class="site-shell py-8 md:py-10">
       <slot />
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-gray-200 mt-16">
-      <div class="max-w-5xl mx-auto px-4 py-8">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div class="text-sm text-gray-500">
-            📈 股票学习站 · 系统化学习投资知识
+    <footer class="site-footer">
+      <div class="site-shell py-8 md:py-10">
+        <div class="grid gap-4 md:grid-cols-[1fr_auto] md:items-center">
+          <div>
+            <div class="flex items-center gap-2 text-sm font-semibold text-slate-800">
+              <span class="brand-mark brand-mark-small" aria-hidden="true">SL</span>
+              股票学习站
+            </div>
+            <p class="mt-2 max-w-xl text-sm text-slate-500">系统化学习投资知识，建立自己的分析框架、交易计划和风险控制纪律。</p>
           </div>
-          <div class="text-xs text-gray-400">
-            ⚠️ 本站内容仅供学习交流，不构成投资建议。投资有风险，入市需谨慎。
-          </div>
+          <p class="max-w-xl text-xs leading-relaxed text-slate-500 md:text-right">
+            本站内容仅供学习交流，不构成投资建议。投资有风险，入市需谨慎。
+          </p>
         </div>
       </div>
     </footer>
 
     <script>
-      // Mobile menu toggle
       const btn = document.getElementById('mobile-menu-btn');
       const menu = document.getElementById('mobile-menu');
       btn?.addEventListener('click', () => {
-        menu?.classList.toggle('hidden');
+        const isHidden = menu?.classList.toggle('hidden');
+        btn.setAttribute('aria-expanded', String(!isHidden));
       });
     </script>
   </body>
