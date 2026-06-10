@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
 const tutorials = await getCollection('tutorials');
+const allCategories = ['基础入门', '技术指标', '行业研究', '交易系统', '风险控制', '实战案例'];
 const sortedTutorials = tutorials.sort(
   (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
 );
@@ -24,13 +25,34 @@ const difficultyColors: Record<string, string> = {
 ---
 
 <BaseLayout title="教程列表 - 股票学习站">
-  <h1 class="text-3xl font-bold text-gray-900 mb-2">📚 教程列表</h1>
-  <p class="text-gray-500 mb-8">系统化学习股票投资知识，从入门到进阶</p>
+  <h1 id="tutorial-list-title" class="text-3xl font-bold text-gray-900 mb-2">📚 教程列表</h1>
+  <p id="tutorial-list-desc" class="text-gray-500 mb-6">系统化学习股票投资知识，从入门到进阶</p>
+
+  <div class="flex flex-wrap gap-2 mb-8">
+    <a
+      href="/tutorials"
+      data-category-filter=""
+      class="category-filter px-3 py-1.5 rounded-full text-sm font-medium transition bg-blue-600 text-white"
+    >
+      全部
+    </a>
+    {allCategories.map((category) => (
+      <a
+        href={`/tutorials?cat=${encodeURIComponent(category)}`}
+        data-category-filter={category}
+        class="category-filter px-3 py-1.5 rounded-full text-sm font-medium transition bg-white text-gray-600 border border-gray-200 hover:border-blue-300 hover:text-blue-600"
+      >
+        {categoryIcons[category] || '📚'} {category}
+      </a>
+    ))}
+  </div>
 
   <div class="space-y-4">
     {sortedTutorials.map((tutorial) => (
       <a
         href={`/tutorials/${tutorial.id}`}
+        data-tutorial-card
+        data-category={tutorial.data.category}
         class="group block p-5 bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all"
       >
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -60,10 +82,70 @@ const difficultyColors: Record<string, string> = {
     ))}
   </div>
 
-  {sortedTutorials.length === 0 && (
-    <div class="text-center py-16 text-gray-400">
-      <div class="text-6xl mb-4">📝</div>
-      <p>教程正在编写中，敬请期待...</p>
-    </div>
-  )}
+  <div id="empty-category-state" class="hidden text-center py-16 text-gray-400">
+    <div class="text-6xl mb-4">📝</div>
+    <p id="empty-category-text">该分类下暂无教程</p>
+    <a href="/tutorials" class="inline-block mt-4 text-blue-600 hover:text-blue-700 font-medium">
+      查看全部教程 →
+    </a>
+  </div>
+
+  <script define:vars={{ categoryIcons }}>
+    const activeClasses = ['bg-blue-600', 'text-white'];
+    const inactiveClasses = ['bg-white', 'text-gray-600', 'border', 'border-gray-200', 'hover:border-blue-300', 'hover:text-blue-600'];
+
+    function setButtonState(button, active) {
+      button.classList.remove(...activeClasses, ...inactiveClasses);
+      button.classList.add(...(active ? activeClasses : inactiveClasses));
+    }
+
+    function applyCategoryFilter(category, updateUrl = false) {
+      const cards = Array.from(document.querySelectorAll('[data-tutorial-card]'));
+      const buttons = Array.from(document.querySelectorAll('[data-category-filter]'));
+      const title = document.getElementById('tutorial-list-title');
+      const desc = document.getElementById('tutorial-list-desc');
+      const emptyState = document.getElementById('empty-category-state');
+      const emptyText = document.getElementById('empty-category-text');
+
+      let visibleCount = 0;
+      cards.forEach((card) => {
+        const matched = !category || card.dataset.category === category;
+        card.classList.toggle('hidden', !matched);
+        if (matched) visibleCount += 1;
+      });
+
+      buttons.forEach((button) => {
+        setButtonState(button, (button.dataset.categoryFilter || '') === category);
+      });
+
+      if (title) title.textContent = category ? `${categoryIcons[category] || '📚'} ${category}` : '📚 教程列表';
+      if (desc) {
+        desc.textContent = category
+          ? `当前显示「${category}」分类，共 ${visibleCount} 篇教程`
+          : '系统化学习股票投资知识，从入门到进阶';
+      }
+      if (emptyState) emptyState.classList.toggle('hidden', visibleCount !== 0);
+      if (emptyText) emptyText.textContent = category ? `「${category}」分类下暂无教程` : '教程正在编写中，敬请期待...';
+
+      if (updateUrl) {
+        const url = category ? `/tutorials?cat=${encodeURIComponent(category)}` : '/tutorials';
+        history.pushState({ category }, '', url);
+      }
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    applyCategoryFilter(params.get('cat') || '');
+
+    document.querySelectorAll('[data-category-filter]').forEach((link) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        applyCategoryFilter(link.dataset.categoryFilter || '', true);
+      });
+    });
+
+    window.addEventListener('popstate', () => {
+      const params = new URLSearchParams(window.location.search);
+      applyCategoryFilter(params.get('cat') || '');
+    });
+  </script>
 </BaseLayout>
