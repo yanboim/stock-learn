@@ -2,6 +2,10 @@ import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import {
   createChart,
   ColorType,
+  CandlestickSeries,
+  HistogramSeries,
+  LineSeries,
+  createSeriesMarkers,
   type IChartApi,
   type ISeriesApi,
   type CandlestickData,
@@ -244,7 +248,7 @@ export default function InteractiveChart({
     chartRef.current = chart;
 
     // Main candlestick series
-    const candleSeries = chart.addCandlestickSeries({
+    const candleSeries = chart.addSeries(CandlestickSeries, {
       upColor: '#ef4444',
       downColor: '#22c55e',
       borderDownColor: '#22c55e',
@@ -267,7 +271,7 @@ export default function InteractiveChart({
       maPeriods.forEach((period) => {
         const maValues = indicators.maData[period];
         if (!maValues) return;
-        const lineSeries = chart.addLineSeries({
+        const lineSeries = chart.addSeries(LineSeries, {
           color: MA_COLORS[period] || '#888',
           lineWidth: 1,
           priceLineVisible: false,
@@ -303,14 +307,15 @@ export default function InteractiveChart({
           text: 'TD9 ↓',
         })),
       ];
-      candleSeries.setMarkers(
+      createSeriesMarkers(
+        candleSeries,
         markers.sort((a, b) => (a.time as string).localeCompare(b.time as string))
       );
     }
 
     // Volume
     if (toggleVol) {
-      const volumeSeries = chart.addHistogramSeries({
+      const volumeSeries = chart.addSeries(HistogramSeries, {
         priceFormat: { type: 'volume' },
         priceScaleId: 'volume',
         color: '#888',
@@ -328,7 +333,7 @@ export default function InteractiveChart({
 
     // MACD sub-chart
     if (toggleMACD) {
-      const macdSeries = chart.addLineSeries({
+      const macdSeries = chart.addSeries(LineSeries, {
         color: '#3b82f6',
         lineWidth: 1,
         priceLineVisible: false,
@@ -342,7 +347,7 @@ export default function InteractiveChart({
         },
       });
 
-      const signalSeries = chart.addLineSeries({
+      const signalSeries = chart.addSeries(LineSeries, {
         color: '#f97316',
         lineWidth: 1,
         priceLineVisible: false,
@@ -350,7 +355,7 @@ export default function InteractiveChart({
         priceScaleId: 'macd',
       });
 
-      const histSeries = chart.addHistogramSeries({
+      const histSeries = chart.addSeries(HistogramSeries, {
         priceScaleId: 'macd',
         priceLineVisible: false,
         lastValueVisible: false,
@@ -374,7 +379,7 @@ export default function InteractiveChart({
 
     // RSI sub-chart
     if (toggleRSI) {
-      const rsiSeries = chart.addLineSeries({
+      const rsiSeries = chart.addSeries(LineSeries, {
         color: '#a855f7',
         lineWidth: 2,
         priceLineVisible: false,
@@ -392,7 +397,7 @@ export default function InteractiveChart({
       );
 
       // Overbought/oversold reference lines
-      const obLine = chart.addLineSeries({
+      const obLine = chart.addSeries(LineSeries, {
         color: 'rgba(239,68,68,0.4)',
         lineWidth: 1,
         lineStyle: 2,
@@ -403,7 +408,7 @@ export default function InteractiveChart({
       });
       obLine.setData(rawData.map((d) => ({ time: d.time as Time, value: 70 })));
 
-      const osLine = chart.addLineSeries({
+      const osLine = chart.addSeries(LineSeries, {
         color: 'rgba(34,197,94,0.4)',
         lineWidth: 1,
         lineStyle: 2,
