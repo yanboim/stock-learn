@@ -86,7 +86,7 @@ const difficultyColors: Record<string, string> = {
       let visibleCount = 0;
       cards.forEach((card) => {
         const matched = !category || card.dataset.category === category;
-        card.classList.toggle('hidden', !matched);
+        card.classList.toggle('is-filtered-out', !matched);
         if (matched) visibleCount += 1;
       });
 

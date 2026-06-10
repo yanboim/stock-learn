@@ -357,6 +357,7 @@ body::before {
 .category-filter.is-active { background: var(--accent); color: white; }
 .tutorial-list-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.95rem; }
 .tutorial-list-card { display: flex; min-height: 15rem; flex-direction: column; justify-content: space-between; }
+.tutorial-list-card.is-filtered-out { display: none; }
 .tutorial-card-topline,
 .card-footer-line { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
 .category-chip,
