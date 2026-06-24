@@ -1,11 +1,13 @@
-import { useEffect, useRef, useMemo, useState } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import {
   createChart,
   ColorType,
+  CandlestickSeries,
+  HistogramSeries,
+  LineSeries,
+  createSeriesMarkers,
   type IChartApi,
-  type CandlestickData,
   type Time,
-  type HistogramData,
   type LineData,
 } from 'lightweight-charts';
 
@@ -96,9 +98,30 @@ function calcRSI(closes: number[], period = 14): number[] {
   return result;
 }
 
+// 可复现的伪随机数生成器（mulberry32）：固定种子 → 固定序列，
+// 避免 Math.random() 导致 SSR 与 hydration 数据不一致、刷新后跳变。
+function mulberry32(seed: number): () => number {
+  let a = seed >>> 0;
+  return () => {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// 不同 preset 用不同种子，保证各自形态稳定且互不相同
+function presetSeed(preset: string): number {
+  let h = 7;
+  for (let i = 0; i < preset.length; i++) h = (h * 31 + preset.charCodeAt(i)) | 0;
+  return h >>> 0;
+}
+
 // Generate realistic sample data with specific patterns
 function generateSampleData(preset: string): OHLCVData[] {
   const data: OHLCVData[] = [];
+  const rand = mulberry32(presetSeed(preset));
   let basePrice = 100;
   const startDate = new Date('2024-01-02');
 
@@ -113,36 +136,36 @@ function generateSampleData(preset: string): OHLCVData[] {
       case 'macd': {
         // Create clear divergence pattern
         const phase = Math.sin(i / 25);
-        change = phase * 1.5 + (Math.random() - 0.48) * 2;
+        change = phase * 1.5 + (rand() - 0.48) * 2;
         break;
       }
       case 'rsi': {
         // Create overbought/oversold swings
         const swing = Math.sin(i / 20) * 2;
-        change = swing + (Math.random() - 0.5) * 1.5;
+        change = swing + (rand() - 0.5) * 1.5;
         break;
       }
       case 'volume': {
         // Create volume spikes
-        change = (Math.random() - 0.48) * 2.5;
+        change = (rand() - 0.48) * 2.5;
         break;
       }
       case 'trendline': {
         // Create trend with clear support/resistance
         const trend = i < 60 ? 0.15 : i < 90 ? -0.1 : 0.2;
-        change = trend + (Math.random() - 0.5) * 2;
+        change = trend + (rand() - 0.5) * 2;
         break;
       }
       default: {
-        change = (Math.random() - 0.48) * 3 + Math.sin(i / 30) * 0.1;
+        change = (rand() - 0.48) * 3 + Math.sin(i / 30) * 0.1;
       }
     }
 
     const open = basePrice;
     const close = open + change;
-    const high = Math.max(open, close) + Math.random() * 2;
-    const low = Math.min(open, close) - Math.random() * 2;
-    const volume = Math.round(30000 + Math.random() * 80000 + Math.abs(change) * 20000);
+    const high = Math.max(open, close) + rand() * 2;
+    const low = Math.min(open, close) - rand() * 2;
+    const volume = Math.round(30000 + rand() * 80000 + Math.abs(change) * 20000);
 
     data.push({
       time: date.toISOString().split('T')[0],
@@ -209,7 +232,7 @@ export default function IndicatorDemo({
     chartRef.current = chart;
 
     // Candlestick
-    const candleSeries = chart.addCandlestickSeries({
+    const candleSeries = chart.addSeries(CandlestickSeries, {
       upColor: '#ef4444',
       downColor: '#22c55e',
       borderDownColor: '#22c55e',
@@ -227,7 +250,7 @@ export default function IndicatorDemo({
     if (showMA) {
       [5, 10, 20, 60].forEach((period) => {
         const ma = calcMA(closes, period);
-        const line = chart.addLineSeries({
+        const line = chart.addSeries(LineSeries, {
           color: MA_COLORS[period],
           lineWidth: 1,
           priceLineVisible: false,
@@ -242,7 +265,8 @@ export default function IndicatorDemo({
 
     // Annotations (buy/sell markers)
     if (annotations.length > 0) {
-      candleSeries.setMarkers(
+      createSeriesMarkers(
+        candleSeries,
         annotations.map((a) => ({
           time: a.time as Time,
           position: a.position,
@@ -255,7 +279,7 @@ export default function IndicatorDemo({
 
     // Volume
     if (showVol) {
-      const volSeries = chart.addHistogramSeries({
+      const volSeries = chart.addSeries(HistogramSeries, {
         priceFormat: { type: 'volume' },
         priceScaleId: 'volume',
       });
@@ -275,9 +299,9 @@ export default function IndicatorDemo({
       const psId = 'macd';
       const margins = { top: showRSI ? 0.6 : showVol ? 0.65 : 0.7, bottom: showRSI ? 0.3 : showVol ? 0.15 : 0 };
 
-      const difLine = chart.addLineSeries({ color: '#3b82f6', lineWidth: 1, priceLineVisible: false, lastValueVisible: false, priceScaleId: psId });
-      const deaLine = chart.addLineSeries({ color: '#f97316', lineWidth: 1, priceLineVisible: false, lastValueVisible: false, priceScaleId: psId });
-      const histLine = chart.addHistogramSeries({ priceScaleId: psId, priceLineVisible: false, lastValueVisible: false });
+      const difLine = chart.addSeries(LineSeries, { color: '#3b82f6', lineWidth: 1, priceLineVisible: false, lastValueVisible: false, priceScaleId: psId });
+      const deaLine = chart.addSeries(LineSeries, { color: '#f97316', lineWidth: 1, priceLineVisible: false, lastValueVisible: false, priceScaleId: psId });
+      const histLine = chart.addSeries(HistogramSeries, { priceScaleId: psId, priceLineVisible: false, lastValueVisible: false });
       chart.priceScale(psId).applyOptions({ scaleMargins: margins });
 
       difLine.setData(dif.map((v, i) => ({ time: rawData[i].time as Time, value: v })));
@@ -292,12 +316,12 @@ export default function IndicatorDemo({
     if (showRSI) {
       const rsi = calcRSI(closes);
       const psId = 'rsi';
-      const rsiLine = chart.addLineSeries({ color: '#a855f7', lineWidth: 2, priceLineVisible: false, lastValueVisible: false, priceScaleId: psId });
+      const rsiLine = chart.addSeries(LineSeries, { color: '#a855f7', lineWidth: 2, priceLineVisible: false, lastValueVisible: false, priceScaleId: psId });
       chart.priceScale(psId).applyOptions({ scaleMargins: { top: 0.85, bottom: 0 } });
       rsiLine.setData(rsi.map((v, i) => ({ time: rawData[i].time as Time, value: v })));
 
-      const obLine = chart.addLineSeries({ color: 'rgba(239,68,68,0.4)', lineWidth: 1, lineStyle: 2, priceLineVisible: false, lastValueVisible: false, priceScaleId: psId, crosshairMarkerVisible: false });
-      const osLine = chart.addLineSeries({ color: 'rgba(34,197,94,0.4)', lineWidth: 1, lineStyle: 2, priceLineVisible: false, lastValueVisible: false, priceScaleId: psId, crosshairMarkerVisible: false });
+      const obLine = chart.addSeries(LineSeries, { color: 'rgba(239,68,68,0.4)', lineWidth: 1, lineStyle: 2, priceLineVisible: false, lastValueVisible: false, priceScaleId: psId, crosshairMarkerVisible: false });
+      const osLine = chart.addSeries(LineSeries, { color: 'rgba(34,197,94,0.4)', lineWidth: 1, lineStyle: 2, priceLineVisible: false, lastValueVisible: false, priceScaleId: psId, crosshairMarkerVisible: false });
       obLine.setData(rawData.map((d) => ({ time: d.time as Time, value: 70 })));
       osLine.setData(rawData.map((d) => ({ time: d.time as Time, value: 30 })));
     }

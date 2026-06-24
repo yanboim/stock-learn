@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import {
   createChart,
   ColorType,
@@ -7,7 +7,6 @@ import {
   LineSeries,
   createSeriesMarkers,
   type IChartApi,
-  type ISeriesApi,
   type CandlestickData,
   type Time,
   type HistogramData,
@@ -36,6 +35,8 @@ interface Props {
   maPeriods?: number[];
   macdParams?: [number, number, number];
   rsiPeriod?: number;
+  /** 模拟数据随机种子，保证 SSR 与 hydration 一致、刷新数据稳定 */
+  seed?: number;
 }
 
 // --- Technical indicator calculations ---
@@ -128,9 +129,23 @@ function detectTDSetup(
   return { buySignals, sellSignals };
 }
 
+// 可复现的伪随机数生成器（mulberry32）：固定种子 → 固定序列。
+// 避免 Math.random() 导致 SSR 与 hydration 数据不一致、刷新后图表跳变。
+function mulberry32(seed: number): () => number {
+  let a = seed >>> 0;
+  return () => {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 // Generate sample data
-function generateSampleData(): OHLCVData[] {
+function generateSampleData(seed: number = 42): OHLCVData[] {
   const data: OHLCVData[] = [];
+  const rand = mulberry32(seed);
   let basePrice = 100;
   const startDate = new Date('2024-01-02');
 
@@ -140,12 +155,12 @@ function generateSampleData(): OHLCVData[] {
     if (date.getDay() === 0 || date.getDay() === 6) continue;
 
     const trend = Math.sin(i / 30) * 5;
-    const change = (Math.random() - 0.48) * 3 + trend * 0.02;
+    const change = (rand() - 0.48) * 3 + trend * 0.02;
     const open = basePrice;
     const close = open + change;
-    const high = Math.max(open, close) + Math.random() * 2;
-    const low = Math.min(open, close) - Math.random() * 2;
-    const volume = Math.round(50000 + Math.random() * 100000 + Math.abs(change) * 30000);
+    const high = Math.max(open, close) + rand() * 2;
+    const low = Math.min(open, close) - rand() * 2;
+    const volume = Math.round(50000 + rand() * 100000 + Math.abs(change) * 30000);
 
     data.push({
       time: date.toISOString().split('T')[0],
@@ -184,6 +199,7 @@ export default function InteractiveChart({
   maPeriods = [5, 10, 20, 60],
   macdParams = [12, 26, 9],
   rsiPeriod = 14,
+  seed = 42,
 }: Props) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
@@ -195,7 +211,7 @@ export default function InteractiveChart({
   const [toggleTD, setToggleTD] = useState(initialTD);
   const [darkMode, setDarkMode] = useState(false);
 
-  const rawData = useMemo(() => externalData || generateSampleData(), [externalData]);
+  const rawData = useMemo(() => externalData || generateSampleData(seed), [externalData, seed]);
 
   const closes = useMemo(() => rawData.map((d) => d.close), [rawData]);
 
@@ -466,6 +482,7 @@ export default function InteractiveChart({
       {/* Toolbar */}
       <div className={`flex items-center justify-between px-4 py-2.5 border-b flex-wrap gap-2 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
         <div className="flex items-center gap-1.5 flex-wrap">
+          <span className={`mr-1 text-xs font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{title}</span>
           <ToolbarButton active={toggleMA} onClick={() => setToggleMA(!toggleMA)} label="MA均线" color="bg-amber-500" />
           <ToolbarButton active={toggleVol} onClick={() => setToggleVol(!toggleVol)} label="成交量" color="bg-slate-500" />
           <ToolbarButton active={toggleMACD} onClick={() => setToggleMACD(!toggleMACD)} label="MACD" color="bg-blue-500" />

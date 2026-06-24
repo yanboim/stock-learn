@@ -18,6 +18,14 @@ const categoryMeta: Record<string, { label: string; tone: string; blurb: string 
   '风险控制': { label: '风控', tone: 'rose', blurb: '止损、仓位、心理纪律和回撤控制' },
 };
 
+// 真实统计：含交互组件演示的教程数、风险控制相关教程数
+const interactiveCount = tutorials.filter((t) =>
+  /interactive\/(InteractiveChart|RiskCalculator|IndicatorDemo|ComparisonTable|ProcessSteps)/i.test(t.body ?? '')
+).length;
+const riskCount = tutorials.filter((t) =>
+  t.data.category === '风险控制' || t.data.tags.some((tag) => /止损|仓位|风控|风险|纪律/.test(tag))
+).length;
+
 const featured = sortedTutorials.slice(0, 4);
 ---
 
@@ -70,12 +78,12 @@ const featured = sortedTutorials.slice(0, 4);
       <span>个学习模块</span>
     </div>
     <div class="metric-card">
-      <strong>图表</strong>
-      <span>交互式演示</span>
+      <strong>{interactiveCount}</strong>
+      <span>篇含交互演示</span>
     </div>
     <div class="metric-card">
-      <strong>风控</strong>
-      <span>每篇强调失效条件</span>
+      <strong>{riskCount}</strong>
+      <span>篇风险控制内容</span>
     </div>
   </section>
 

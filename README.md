@@ -1,63 +1,73 @@
-# Astro Starter Kit: Blog
+# 股票学习站 · Stock Learn
 
-```sh
-npm create astro@latest -- --template blog
-```
+一个系统化的中文股票投资学习网站。把零散的技术分析、行业研究和交易系统知识，整理成可执行的投资框架，用交互式图表和案例建立自己的分析方法。
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+线上地址：<https://stock-learn.pages.dev>
 
-Features:
+> ⚠️ 本站内容仅供学习交流，不构成任何投资建议。投资有风险，入市需谨慎。
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+## 技术栈
 
-## 🚀 Project Structure
+| 类别 | 选型 |
+|------|------|
+| 框架 | [Astro 6](https://astro.build)（静态站点）+ MDX 内容集合 |
+| 交互 | React 19（`@astrojs/react`，岛屿组件） |
+| 样式 | TailwindCSS 4（`@tailwindcss/vite`）+ Typography 插件 |
+| 图表 | [lightweight-charts](https://tradingview.github.io/lightweight-charts/)（TradingView 出品） |
+| 内容增强 | `remark-directive` + 自写的 callout 插件 |
+| 部署 | Cloudflare Pages |
 
-Inside of your Astro project, you'll see the following folders and files:
+## 命令
+
+| 命令 | 作用 |
+|:-----|:-----|
+| `npm install` | 安装依赖（需 Node ≥ 22.12） |
+| `npm run dev` | 启动本地开发服务器 `localhost:4321` |
+| `npm run build` | 构建生产站点到 `./dist/` |
+| `npm run preview` | 本地预览构建产物 |
+
+## 目录结构
 
 ```text
-├── public/
-├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+src/
+├── content/tutorials/      # 全部教程（MDX），按主题分文件
+│   ├── 01~18-*.mdx         # 基础课程：K线、均线、MACD、RSI、估值、止损…
+│   ├── td-sequential-*.mdx # 神奇九转（TD Sequential）完整教程
+│   └── mjie-*.mdx          # 「Mi姐交易体系」六章（市场认知/技术/策略/风控/宏观/心法）
+├── components/
+│   ├── TutorialBanner.astro
+│   └── interactive/        # React 交互组件
+│       ├── InteractiveChart.tsx   # K线 + MA/MACD/RSI/TD9 多指标
+│       ├── RiskCalculator.tsx     # 止损/仓位/盈亏比/复利计算
+│       ├── IndicatorDemo.tsx
+│       ├── ComparisonTable.tsx
+│       └── ProcessSteps.tsx
+├── layouts/                # BaseLayout / TutorialLayout
+├── pages/
+│   ├── index.astro         # 首页
+│   └── tutorials/
+│       ├── index.astro     # 教程列表（带分类筛选）
+│       ├── [slug].astro    # 教程详情（动态静态生成）
+│       └── mistery-map.astro # Mi姐交易体系知识地图
+├── styles/global.css       # 设计系统
+└── content.config.ts       # 内容 schema（category/difficulty/tags/order…）
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 内容结构
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+每篇教程都有结构化的 frontmatter（见 `src/content.config.ts`）：
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+- **category**：基础入门 / 技术指标 / 行业研究 / 交易系统 / 实战案例 / 风险控制
+- **difficulty**：入门 / 进阶 / 高级
+- **tags**、**order**、**publishDate**
 
-Any static assets, like images, can be placed in the `public/` directory.
+教程大量使用**内联 SVG 信息图**（`<div class="illustration">`），而非位图，保证清晰度和体积。
 
-## 🧞 Commands
+## 自定义能力
 
-All commands are run from the root of the project, from a terminal:
+- **callout 提示框**：在 MDX 中用 `:::tip` / `:::note` / `:::caution` / `:::warning` / `:::danger` 容器指令，由 `remark-callout-directive.mjs` 渲染成彩色提示框。
+- **交互式图表**：在 MDX 中 `import InteractiveChart from '../../components/interactive/InteractiveChart'`，传入 `showMA` / `showMACD` / `showRSI` / `showTD` 等参数。
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## 部署
 
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+构建产物在 `./dist`，通过 Cloudflare Pages 部署（见 `wrangler.toml`）。每次推送到 `main` 分支自动触发部署。
