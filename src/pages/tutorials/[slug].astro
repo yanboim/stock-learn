@@ -11,7 +11,11 @@ export async function getStaticPaths() {
 }
 
 const { tutorial } = Astro.props;
-const { Content } = await render(tutorial);
+const { Content, headings } = await render(tutorial);
+
+// 仅用二级标题生成目录；超长文章（如 mjie 系列）才显示
+const tocItems = headings.filter((h) => h.depth === 2).map((h) => ({ slug: h.slug, text: h.text }));
+const showToc = tocItems.length >= 8;
 ---
 
 <TutorialLayout
@@ -21,6 +25,21 @@ const { Content } = await render(tutorial);
   difficulty={tutorial.data.difficulty}
   publishDate={tutorial.data.publishDate}
   tags={tutorial.data.tags}
+  coverImage={tutorial.data.coverImage}
 >
+  {showToc && (
+    <details class="tutorial-toc">
+      <summary>
+        <span class="toc-label">本章目录</span>
+        <span class="toc-count">{tocItems.length} 节</span>
+      </summary>
+      <nav class="toc-list" aria-label="章节目录">
+        <a href={`#${tocItems[0].slug}`} class="toc-active">{tocItems[0].text}</a>
+        {tocItems.slice(1).map((item) => (
+          <a href={`#${item.slug}`}>{item.text}</a>
+        ))}
+      </nav>
+    </details>
+  )}
   <Content />
 </TutorialLayout>

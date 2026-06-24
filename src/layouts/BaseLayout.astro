@@ -4,18 +4,39 @@ import '../styles/global.css';
 export interface Props {
   title?: string;
   description?: string;
+  /** Open Graph / Twitter 分享卡片图，相对路径或绝对 URL */
+  ogImage?: string;
+  /** 覆盖 canonical URL，默认用当前页面路径 */
+  canonical?: string;
+  /** 页面类型：website / article */
+  type?: 'website' | 'article';
+  /** 文章发布时间（ISO 字符串），仅 article 类型用 */
+  publishedTime?: string;
 }
 
-const { title = '股票学习站', description = '系统化学习股票投资：技术分析、行业研究、交易系统' } = Astro.props;
+const SITE_NAME = '股票学习站';
+const {
+  title,
+  description = '系统化学习股票投资：技术分析、行业研究、交易系统',
+  ogImage = '/og-default.svg',
+  canonical,
+  type = 'website',
+  publishedTime,
+} = Astro.props;
 const pathname = Astro.url.pathname;
+
+// 拼接完整页面标题与规范 URL
+const fullTitle = title ? `${title} - ${SITE_NAME}` : `${SITE_NAME} · 系统化股票学习`;
+const canonicalURL = new URL(canonical || pathname, Astro.site).toString();
+const ogImageURL = new URL(ogImage, Astro.site).toString();
 
 const navItems = [
   { label: '首页', href: '/', active: pathname === '/' },
   { label: 'Mistery 秘籍', href: '/tutorials/mjie-00-chapter-index', active: pathname.startsWith('/tutorials/mjie-') || pathname === '/tutorials/mistery-map' || pathname === '/tutorials/mistery-map/' },
   { label: '教程', href: '/tutorials', active: pathname === '/tutorials' || pathname === '/tutorials/' },
-  { label: '技术指标', href: '/tutorials?cat=技术指标', active: false },
-  { label: '行业研究', href: '/tutorials?cat=行业研究', active: false },
-  { label: '交易系统', href: '/tutorials?cat=交易系统', active: false },
+  { label: '技术指标', href: '/tutorials?cat=技术指标', active: false, cat: '技术指标' },
+  { label: '行业研究', href: '/tutorials?cat=行业研究', active: false, cat: '行业研究' },
+  { label: '交易系统', href: '/tutorials?cat=交易系统', active: false, cat: '交易系统' },
 ];
 ---
 
@@ -24,9 +45,29 @@ const navItems = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{title}</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={title || SITE_NAME} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:locale" content="zh_CN" />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title || SITE_NAME} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    <!-- RSS 自动发现 -->
+    <link rel="alternate" type="application/rss+xml" title={SITE_NAME} href="/rss.xml" />
   </head>
   <body class="min-h-screen text-slate-950 antialiased">
     <a href="#main-content" class="skip-link">跳到正文</a>
@@ -41,6 +82,7 @@ const navItems = [
             return (
               <a
                 href={item.href}
+                data-nav-cat={item.cat ?? undefined}
                 class={`nav-pill ${item.active ? 'nav-pill-active' : ''}`}
               >
                 {item.label}
@@ -93,6 +135,16 @@ const navItems = [
         const isHidden = menu?.classList.toggle('hidden');
         btn.setAttribute('aria-expanded', String(!isHidden));
       });
+
+      // 按当前 ?cat= 高亮对应分类导航项（静态站点拿不到 query，故客户端补）
+      const currentCat = new URLSearchParams(window.location.search).get('cat');
+      if (currentCat) {
+        document
+          .querySelectorAll<HTMLAnchorElement>('[data-nav-cat]')
+          .forEach((el) => {
+            if (el.dataset.navCat === currentCat) el.classList.add('nav-pill-active');
+          });
+      }
     </script>
   </body>
 </html>

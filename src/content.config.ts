@@ -18,8 +18,8 @@ const tutorials = defineCollection({
     difficulty: z.enum(['入门', '进阶', '高级']).default('入门'),
     publishDate: z.coerce.date(),
     updateDate: z.coerce.date().optional(),
+    /** 分享卡片图，相对 public 目录的路径或绝对 URL；留空则用站点默认 OG 图 */
     coverImage: z.string().optional(),
-    infographic: z.string().optional(),
     order: z.number().default(0),
   }),
 });

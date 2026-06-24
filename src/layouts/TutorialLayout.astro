@@ -10,47 +10,94 @@ export interface Props {
   publishDate: Date;
   tags?: string[];
   icon?: string;
+  coverImage?: string;
 }
 
-const { title, description, category, difficulty, publishDate, tags, icon } = Astro.props;
+const { title, description, category, difficulty, publishDate, tags, icon, coverImage } = Astro.props;
 ---
 
-<BaseLayout title={`${title} - 股票学习站`} description={description}>
-  <!-- Back link -->
-  <a href="/tutorials" class="inline-flex items-center gap-1 text-sm font-semibold text-blue-600 hover:text-blue-800 mb-4">
-    返回教程列表
-  </a>
+<BaseLayout
+  title={title}
+  description={description}
+  type="article"
+  publishedTime={publishDate.toISOString()}
+  ogImage={coverImage}
+>
+  <div class="tutorial-read">
+    <!-- Back link -->
+    <a href="/tutorials" class="inline-flex items-center gap-1 text-sm font-semibold text-blue-600 hover:text-blue-800 mb-4">
+      返回教程列表
+    </a>
 
-  <!-- Tutorial Banner -->
-  <TutorialBanner
-    title={title}
-    description={description}
-    category={category}
-    difficulty={difficulty}
-    publishDate={publishDate}
-    tags={tags}
-    icon={icon}
-  />
+    <!-- Tutorial Banner -->
+    <TutorialBanner
+      title={title}
+      description={description}
+      category={category}
+      difficulty={difficulty}
+      publishDate={publishDate}
+      tags={tags}
+      icon={icon}
+    />
 
-  <!-- Article Content -->
-  <article class="prose prose-lg max-w-none mt-6
-    prose-headings:text-gray-900
-    prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
-    prose-code:bg-gray-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
-    prose-pre:bg-gray-900 prose-pre:text-gray-100
-    prose-img:rounded-xl prose-img:shadow-md
-    prose-table:border
-    prose-th:bg-gray-50 prose-th:border prose-th:px-4 prose-th:py-2
-    prose-td:border prose-td:px-4 prose-td:py-2
-  ">
-    <slot />
-  </article>
+    <!-- Article Content -->
+    <article class="prose prose-lg mt-6
+      prose-headings:text-gray-900
+      prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
+      prose-code:bg-gray-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+      prose-pre:bg-gray-900 prose-pre:text-gray-100
+      prose-img:rounded-xl prose-img:shadow-md
+      prose-table:border
+      prose-th:bg-gray-50 prose-th:border prose-th:px-4 prose-th:py-2
+      prose-td:border prose-td:px-4 prose-td:py-2
+    ">
+      <slot />
+    </article>
 
-  <!-- Risk Disclaimer -->
-  <div class="mt-12 p-6 bg-amber-50 border border-amber-200 rounded-xl">
-    <p class="text-sm text-amber-900">
-      <strong>风险提示：</strong>本教程内容仅供学习交流，不构成任何投资建议。
-      投资有风险，入市需谨慎。任何技术指标都有局限性，请结合多因素综合判断。
-    </p>
+    <!-- Risk Disclaimer -->
+    <div class="mt-12 p-6 bg-amber-50 border border-amber-200 rounded-xl">
+      <p class="text-sm text-amber-900">
+        <strong>风险提示：</strong>本教程内容仅供学习交流，不构成任何投资建议。
+        投资有风险，入市需谨慎。任何技术指标都有局限性，请结合多因素综合判断。
+      </p>
+    </div>
   </div>
+
+  <!-- 章节目录 scroll-spy：高亮当前阅读的小节 -->
+  <script>
+    const toc = document.querySelector('.tutorial-toc');
+    if (toc) {
+      const links = Array.from(toc.querySelectorAll<HTMLAnchorElement>('.toc-list a'));
+      const linkById = new Map<string, HTMLAnchorElement>();
+      links.forEach((link) => {
+        const id = link.getAttribute('href')?.slice(1);
+        if (id) linkById.set(id, link);
+      });
+      const headings = Array.from(linkById.keys())
+        .map((id) => document.getElementById(id))
+        .filter((el): el is HTMLElement => Boolean(el));
+
+      let activeId: string | null = null;
+      const setActive = (id: string | null) => {
+        if (id === activeId) return;
+        activeId = id;
+        links.forEach((link) => {
+          const linkId = link.getAttribute('href')?.slice(1);
+          link.classList.toggle('toc-active', linkId === id);
+        });
+      };
+
+      // 报表上方视角：取离视口顶部最近且已进入的标题
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+          if (visible[0]) setActive(visible[0].target.id);
+        },
+        { rootMargin: '-80px 0px -70% 0px', threshold: 0 }
+      );
+      headings.forEach((heading) => observer.observe(heading));
+    }
+  </script>
 </BaseLayout>
