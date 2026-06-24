@@ -1,0 +1,586 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const learningNodes = [
+  {
+    code: 'A1',
+    title: '市场认知',
+    subtitle: '先判断自己和市场',
+    href: '/tutorials/mjie-01-trading-foundation',
+    items: ['交易本质', '趋势优先', '资金类型', '复盘框架'],
+  },
+  {
+    code: 'B2',
+    title: '技术工具',
+    subtitle: '用图表验证方向',
+    href: '/tutorials/mjie-02-technical-indicators',
+    items: ['量价关系', '均线结构', 'MACD', '筹码形态'],
+  },
+  {
+    code: 'C3',
+    title: '策略模型',
+    subtitle: '把判断变成模式',
+    href: '/tutorials/mjie-03-trading-strategy',
+    items: ['交易模式', '520战法', '趋势交易', '期望值'],
+  },
+  {
+    code: 'D4',
+    title: '执行风控',
+    subtitle: '控制回撤和动作',
+    href: '/tutorials/mjie-04-trading-skills-risk',
+    items: ['仓位管理', '止损纪律', '补仓边界', '防守计划'],
+  },
+  {
+    code: 'E5',
+    title: '周期主线',
+    subtitle: '识别大环境和方向',
+    href: '/tutorials/mjie-05-macro-cycle',
+    items: ['流动性', '产业周期', '政策节奏', '美元周期'],
+  },
+  {
+    code: 'F6',
+    title: '主题心法',
+    subtitle: '提升主线与节奏感',
+    href: '/tutorials/mjie-06-market-mindset-and-themes',
+    items: ['投资心法', '军工细分', '战略资源', '机构风控'],
+  },
+];
+
+const executionLoop = [
+  '观察市场',
+  '确认主线',
+  '筛选个股',
+  '等待买点',
+  '控制仓位',
+  '设置失效',
+  '跟踪卖点',
+  '复盘迭代',
+];
+
+const learnerPaths = [
+  { title: '刚入门', body: '先读市场认知和执行风控，不急着追求复杂指标。', href: '/tutorials/mjie-01-trading-foundation' },
+  { title: '偏技术', body: '用技术工具建立买卖点语言，再回到策略模型做约束。', href: '/tutorials/mjie-02-technical-indicators' },
+  { title: '容易追高', body: '重点看执行风控，把仓位、止损、补仓边界写进计划。', href: '/tutorials/mjie-04-trading-skills-risk' },
+  { title: '想做主线', body: '从周期主线进入，再用主题心法理解板块轮动和资金节奏。', href: '/tutorials/mjie-05-macro-cycle' },
+];
+---
+
+<BaseLayout
+  title="Mistery 秘籍：交易体系知识地图 - 股票学习站"
+  description="用一张知识地图把 Mi姐交易体系拆成市场认知、技术工具、策略模型、执行风控、周期主线和主题心法。"
+>
+  <section class="mistery-map-hero" aria-labelledby="mistery-map-title">
+    <div class="mistery-hero-copy">
+      <p class="mistery-label">Mistery System Map</p>
+      <h1 id="mistery-map-title">把六章内容，整理成一套交易闭环</h1>
+      <p class="mistery-lead">
+        这不是新增一套方法，而是把章节目录转成学习路径和执行流程。
+      </p>
+      <div class="mistery-actions">
+        <a class="primary-button" href="/tutorials/mjie-00-chapter-index">章节目录</a>
+        <a class="secondary-button" href="#execution-loop">看交易闭环</a>
+      </div>
+    </div>
+
+    <div class="mistery-orbit" aria-label="Mistery 交易体系六层结构">
+      <div class="orbit-core">
+        <span>MI</span>
+        <strong>交易体系</strong>
+      </div>
+      {learningNodes.map((node, index) => (
+        <a href={node.href} class={`orbit-node orbit-node-${index + 1}`}>
+          <span>{node.code}</span>
+          <strong>{node.title}</strong>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="mistery-map-section" aria-labelledby="map-layers-title">
+    <div class="mistery-section-head">
+      <h2 id="map-layers-title">六层知识地图</h2>
+      <p>每一层解决一个问题，组合起来才是完整交易系统。</p>
+    </div>
+
+    <div class="knowledge-grid">
+      {learningNodes.map((node, index) => (
+        <a href={node.href} class={`knowledge-card knowledge-card-${index + 1}`}>
+          <div class="knowledge-card-top">
+            <span>{node.code}</span>
+            <strong>{node.title}</strong>
+          </div>
+          <p>{node.subtitle}</p>
+          <div class="keyword-cluster">
+            {node.items.map((item) => <span>{item}</span>)}
+          </div>
+          <div class="knowledge-link">进入章节</div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section id="execution-loop" class="mistery-loop-section" aria-labelledby="execution-loop-title">
+    <div class="loop-panel">
+      <div class="mistery-section-head compact">
+        <h2 id="execution-loop-title">交易执行闭环</h2>
+        <p>学习不是为了记住观点，而是为了在每次交易前后形成可复用动作。</p>
+      </div>
+      <div class="loop-track">
+        {executionLoop.map((step, index) => (
+          <div class="loop-step">
+            <span>{String(index + 1).padStart(2, '0')}</span>
+            <strong>{step}</strong>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="mistery-map-section" aria-labelledby="learner-path-title">
+    <div class="mistery-section-head">
+      <h2 id="learner-path-title">按你的状态进入</h2>
+      <p>不同阶段不要从同一个入口硬啃，先解决最影响账户的问题。</p>
+    </div>
+
+    <div class="learner-path-grid">
+      {learnerPaths.map((path) => (
+        <a href={path.href} class="learner-path-card">
+          <strong>{path.title}</strong>
+          <p>{path.body}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="mistery-risk-note" aria-label="风险提示">
+    <strong>使用原则</strong>
+    <p>所有内容只作为学习材料。真正交易前，仍需要结合最新行情、公司公告、财报数据、市场流动性和个人风险承受能力复核。</p>
+  </section>
+</BaseLayout>
+
+<style>
+  .mistery-map-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 0.96fr) minmax(360px, 1.04fr);
+    align-items: center;
+    gap: clamp(2rem, 6vw, 5rem);
+    min-height: calc(100dvh - 9rem);
+    padding: clamp(2.4rem, 6vw, 5rem) 0 clamp(2rem, 5vw, 4rem);
+  }
+
+  .mistery-label {
+    margin-bottom: 0.9rem;
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .mistery-hero-copy h1 {
+    max-width: 11.5ch;
+    color: var(--ink);
+    font-size: clamp(2.7rem, 6.4vw, 5.35rem);
+    font-weight: 950;
+    letter-spacing: -0.078em;
+    line-height: 0.96;
+    text-wrap: balance;
+  }
+
+  .mistery-lead {
+    margin: 1.25rem 0 1.7rem;
+    max-width: 34rem;
+    color: #475569;
+    font-size: clamp(1.05rem, 1.9vw, 1.2rem);
+    line-height: 1.75;
+  }
+
+  .mistery-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .mistery-orbit {
+    position: relative;
+    min-height: min(42rem, 72vw);
+    border: 1px solid rgba(203, 213, 225, 0.75);
+    border-radius: 2rem;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.14), transparent 10rem),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(239, 246, 255, 0.72));
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .mistery-orbit::before,
+  .mistery-orbit::after {
+    content: '';
+    position: absolute;
+    inset: 12%;
+    border: 1px solid rgba(37, 99, 235, 0.16);
+    border-radius: 999px;
+  }
+
+  .mistery-orbit::after {
+    inset: 25%;
+    border-style: dashed;
+  }
+
+  .orbit-core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 9.4rem;
+    height: 9.4rem;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    border-radius: 1.8rem;
+    background: linear-gradient(145deg, #0f172a, #1e3a8a);
+    color: white;
+    box-shadow: 0 22px 58px rgba(37, 99, 235, 0.26);
+  }
+
+  .orbit-core span {
+    font-size: 2.45rem;
+    font-weight: 950;
+    letter-spacing: -0.08em;
+    line-height: 1;
+  }
+
+  .orbit-core strong {
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.9rem;
+  }
+
+  .orbit-node {
+    position: absolute;
+    z-index: 3;
+    display: grid;
+    gap: 0.25rem;
+    min-width: 8.6rem;
+    border: 1px solid rgba(203, 213, 225, 0.86);
+    border-radius: 1.15rem;
+    background: rgba(255, 255, 255, 0.88);
+    padding: 0.9rem 1rem;
+    box-shadow: 0 16px 44px rgba(15, 23, 42, 0.08);
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .orbit-node:hover {
+    transform: translateY(-4px);
+    border-color: rgba(37, 99, 235, 0.45);
+    box-shadow: 0 22px 58px rgba(15, 23, 42, 0.12);
+  }
+
+  .orbit-node span,
+  .knowledge-card-top span,
+  .loop-step span {
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 950;
+    letter-spacing: 0.08em;
+  }
+
+  .orbit-node strong {
+    color: var(--ink);
+    font-size: 1.02rem;
+  }
+
+  .orbit-node-1 { left: 12%; top: 13%; }
+  .orbit-node-2 { right: 12%; top: 13%; }
+  .orbit-node-3 { right: 6%; top: 45%; }
+  .orbit-node-4 { right: 16%; bottom: 10%; }
+  .orbit-node-5 { left: 12%; bottom: 10%; }
+  .orbit-node-6 { left: 6%; top: 45%; }
+
+  .mistery-map-section,
+  .mistery-loop-section {
+    margin-top: clamp(3.2rem, 7vw, 5.4rem);
+  }
+
+  .mistery-section-head {
+    display: grid;
+    gap: 0.8rem;
+    max-width: 45rem;
+    margin-bottom: 1.35rem;
+  }
+
+  .mistery-section-head.compact {
+    max-width: 38rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .mistery-section-head h2 {
+    color: var(--ink);
+    font-size: clamp(1.9rem, 4vw, 3.1rem);
+    font-weight: 950;
+    letter-spacing: -0.058em;
+    line-height: 1.04;
+  }
+
+  .mistery-section-head p {
+    color: #64748b;
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .knowledge-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr 1fr;
+    gap: 0.95rem;
+  }
+
+  .knowledge-card {
+    min-height: 17rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid rgba(203, 213, 225, 0.78);
+    border-radius: 1.35rem;
+    background: rgba(255, 255, 255, 0.78);
+    padding: 1.15rem;
+    box-shadow: 0 16px 42px rgba(15, 23, 42, 0.055);
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .knowledge-card:hover,
+  .learner-path-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(37, 99, 235, 0.45);
+    box-shadow: 0 24px 64px rgba(15, 23, 42, 0.105);
+  }
+
+  .knowledge-card-1,
+  .knowledge-card-4 {
+    background: linear-gradient(145deg, #0f172a, #1e3a8a);
+    color: white;
+  }
+
+  .knowledge-card-1 .knowledge-card-top span,
+  .knowledge-card-4 .knowledge-card-top span,
+  .knowledge-card-1 p,
+  .knowledge-card-4 p,
+  .knowledge-card-1 .knowledge-link,
+  .knowledge-card-4 .knowledge-link {
+    color: rgba(255, 255, 255, 0.76);
+  }
+
+  .knowledge-card-1 .knowledge-card-top strong,
+  .knowledge-card-4 .knowledge-card-top strong {
+    color: white;
+  }
+
+  .knowledge-card-2,
+  .knowledge-card-5 {
+    background: linear-gradient(145deg, rgba(239, 246, 255, 0.96), rgba(255, 255, 255, 0.8));
+  }
+
+  .knowledge-card-3,
+  .knowledge-card-6 {
+    background:
+      linear-gradient(135deg, rgba(37, 99, 235, 0.09), transparent 46%),
+      rgba(255, 255, 255, 0.82);
+  }
+
+  .knowledge-card-top {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .knowledge-card-top strong {
+    color: var(--ink);
+    font-size: 1.45rem;
+    font-weight: 920;
+    letter-spacing: -0.045em;
+  }
+
+  .knowledge-card p {
+    margin-top: 0.8rem;
+    color: #64748b;
+    line-height: 1.65;
+  }
+
+  .keyword-cluster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 1.2rem 0;
+  }
+
+  .keyword-cluster span {
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.09);
+    color: #1d4ed8;
+    padding: 0.35rem 0.62rem;
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+
+  .knowledge-card-1 .keyword-cluster span,
+  .knowledge-card-4 .keyword-cluster span {
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.86);
+  }
+
+  .knowledge-link {
+    color: var(--accent);
+    font-size: 0.9rem;
+    font-weight: 900;
+  }
+
+  .loop-panel {
+    border: 1px solid rgba(37, 99, 235, 0.18);
+    border-radius: 1.65rem;
+    background: linear-gradient(145deg, rgba(239, 246, 255, 0.96), rgba(255, 255, 255, 0.74));
+    padding: clamp(1.2rem, 4vw, 2rem);
+    box-shadow: var(--shadow);
+  }
+
+  .loop-track {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .loop-step {
+    min-height: 7.5rem;
+    display: grid;
+    align-content: space-between;
+    border: 1px solid rgba(203, 213, 225, 0.76);
+    border-radius: 1.1rem;
+    background: rgba(255, 255, 255, 0.82);
+    padding: 1rem;
+  }
+
+  .loop-step strong {
+    color: var(--ink);
+    font-size: 1.05rem;
+  }
+
+  .learner-path-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+
+  .learner-path-card {
+    min-height: 12rem;
+    border: 1px solid rgba(203, 213, 225, 0.78);
+    border-radius: 1.25rem;
+    background: rgba(255, 255, 255, 0.78);
+    padding: 1.1rem;
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .learner-path-card strong {
+    color: var(--ink);
+    font-size: 1.25rem;
+    font-weight: 920;
+    letter-spacing: -0.035em;
+  }
+
+  .learner-path-card p {
+    margin-top: 0.75rem;
+    color: #64748b;
+    line-height: 1.68;
+  }
+
+  .mistery-risk-note {
+    display: grid;
+    gap: 0.45rem;
+    margin-top: clamp(3rem, 7vw, 5rem);
+    border: 1px solid rgba(245, 158, 11, 0.26);
+    border-radius: 1.25rem;
+    background: rgba(255, 251, 235, 0.78);
+    padding: 1.15rem;
+  }
+
+  .mistery-risk-note strong {
+    color: #92400e;
+    font-weight: 920;
+  }
+
+  .mistery-risk-note p {
+    color: #78350f;
+    line-height: 1.7;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .orbit-core {
+      animation: subtlePulse 5s ease-in-out infinite;
+    }
+  }
+
+  @keyframes subtlePulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.025); }
+  }
+
+  @media (max-width: 960px) {
+    .mistery-map-hero,
+    .knowledge-grid,
+    .loop-track,
+    .learner-path-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .mistery-map-hero {
+      min-height: auto;
+    }
+
+    .mistery-orbit {
+      min-height: 34rem;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .mistery-map-hero,
+    .knowledge-grid,
+    .loop-track,
+    .learner-path-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .mistery-hero-copy h1 {
+      max-width: 100%;
+    }
+
+    .mistery-orbit {
+      min-height: auto;
+      display: grid;
+      gap: 0.7rem;
+      padding: 1rem;
+    }
+
+    .mistery-orbit::before,
+    .mistery-orbit::after {
+      display: none;
+    }
+
+    .orbit-core,
+    .orbit-node {
+      position: relative;
+      left: auto;
+      right: auto;
+      top: auto;
+      bottom: auto;
+      width: auto;
+      height: auto;
+      min-width: 0;
+      transform: none;
+    }
+
+    .orbit-core {
+      min-height: 7rem;
+    }
+
+    @keyframes subtlePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.015); }
+    }
+  }
+</style>

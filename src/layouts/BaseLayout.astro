@@ -11,7 +11,7 @@ const pathname = Astro.url.pathname;
 
 const navItems = [
   { label: '首页', href: '/', active: pathname === '/' },
-  { label: 'Mistery 秘籍', href: '/tutorials/mjie-00-chapter-index', active: pathname.startsWith('/tutorials/mjie-') },
+  { label: 'Mistery 秘籍', href: '/tutorials/mjie-00-chapter-index', active: pathname.startsWith('/tutorials/mjie-') || pathname === '/tutorials/mistery-map' || pathname === '/tutorials/mistery-map/' },
   { label: '教程', href: '/tutorials', active: pathname === '/tutorials' || pathname === '/tutorials/' },
   { label: '技术指标', href: '/tutorials?cat=技术指标', active: false },
   { label: '行业研究', href: '/tutorials?cat=行业研究', active: false },
