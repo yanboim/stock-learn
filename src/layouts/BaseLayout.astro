@@ -10,11 +10,12 @@ const { title = '股票学习站', description = '系统化学习股票投资：
 const pathname = Astro.url.pathname;
 
 const navItems = [
-  { label: '首页', href: '/' },
-  { label: '教程', href: '/tutorials' },
-  { label: '技术指标', href: '/tutorials?cat=技术指标' },
-  { label: '行业研究', href: '/tutorials?cat=行业研究' },
-  { label: '交易系统', href: '/tutorials?cat=交易系统' },
+  { label: '首页', href: '/', active: pathname === '/' },
+  { label: 'Mistery 秘籍', href: '/tutorials/mjie-00-chapter-index', active: pathname.startsWith('/tutorials/mjie-') },
+  { label: '教程', href: '/tutorials', active: pathname === '/tutorials' || pathname === '/tutorials/' },
+  { label: '技术指标', href: '/tutorials?cat=技术指标', active: false },
+  { label: '行业研究', href: '/tutorials?cat=行业研究', active: false },
+  { label: '交易系统', href: '/tutorials?cat=交易系统', active: false },
 ];
 ---
 
@@ -37,11 +38,10 @@ const navItems = [
         </a>
         <div class="hidden md:flex items-center gap-1 rounded-full border border-slate-200/70 bg-white/70 p-1 shadow-sm shadow-slate-900/5">
           {navItems.map((item) => {
-            const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith('/tutorials') && item.label === '教程';
             return (
               <a
                 href={item.href}
-                class={`nav-pill ${isActive ? 'nav-pill-active' : ''}`}
+                class={`nav-pill ${item.active ? 'nav-pill-active' : ''}`}
               >
                 {item.label}
               </a>
